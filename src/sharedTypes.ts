@@ -1,19 +1,21 @@
 export interface FirebaseCubeState {
   status: "online" | "offline";
   statusChangedAt?: Date | undefined;
-  essentialSystemInfo?: CubEssentialSystemInfo | undefined;
+  essentialSystemInfo?: EssentialSystemInfo | undefined;
   fullSystemInfoJson?: string | undefined;
 }
 
-export const CubEssentialSystemInfo = (o?: {
+export const EssentialSystemInfo = (o: {
   cpuLoadsPercent: number[];
   memUsagePercent: number;
+  cpuTemperature: number;
+  batteryLevelPercentage: number;
 }) => {
   return { ...o } as const;
 };
-export interface CubEssentialSystemInfo extends ReturnType<typeof CubEssentialSystemInfo> {}
+export interface EssentialSystemInfo extends ReturnType<typeof EssentialSystemInfo> {}
 
-export const CubeSystemInfo = (o?: {}) => {
+export const CubeSystemInfo = (o: {}) => {
   return { ...o } as const;
 };
 export interface CubeSystemInfo extends ReturnType<typeof CubeSystemInfo> {}
