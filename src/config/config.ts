@@ -1,6 +1,7 @@
 import { tryRequire } from "../modules/utils";
 
 const localConfig = {
+  FIREBASE_EMAIL: "",
   FIREBASE_PASSWORD: "",
 };
 

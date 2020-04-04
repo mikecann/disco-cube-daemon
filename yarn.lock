@@ -352,6 +352,13 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
+"@types/systeminformation@^3.54.1":
+  version "3.54.1"
+  resolved "https://registry.yarnpkg.com/@types/systeminformation/-/systeminformation-3.54.1.tgz#bbc1b9e4ae2e60d45f75906029c6fb5436e1c5cb"
+  integrity sha512-vvisj2mdWygyc0jk/5XtSVq9gtxCmF3nrGwv8wVway8pwNRhtPji/MU9dc1L0F6rl0F/NFIHa4ScRU7wmNaHmg==
+  dependencies:
+    systeminformation "*"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -1912,6 +1919,11 @@ symbol-observable@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
+
+systeminformation@*, systeminformation@^4.23.1:
+  version "4.23.1"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-4.23.1.tgz#03dcc16570adfa1e0b6ceb871aad8f34c9ae8014"
+  integrity sha512-gtqfvz5jUIMqWn0kkdkV4G8uiLmJckQ+z6aKy1uyE0OPU/6tStubahtZDiF0ajSRVJht+Vd4pX5DDwQLhAapww==
 
 tar@^4.4.2:
   version "4.4.13"
