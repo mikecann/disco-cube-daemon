@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/database";
-import { FirebaseCubeState } from "../sharedTypes";
+import { FirebaseCollections } from "../sharedTypes";
 
 const config = {
   apiKey: "AIzaSyCNZOxJQX8x5-z2iWyMLCkKZ6sQjkaGZR8",
@@ -27,22 +27,35 @@ export const signOutOfFirebase = () => firebase.auth().signOut();
 export const listenForFirebaseAuthStateChange = (handler: (user: firebase.User | null) => any) =>
   firebase.auth().onAuthStateChanged(handler);
 
-export const listenForCubeSnapshots = (handler: (cube: FirebaseCubeState | undefined) => any) =>
-  firebase
-    .firestore()
-    .collection("cubes")
-    .doc("0")
-    .onSnapshot((x) => handler(x.data() as any));
-
-export const updateFirebaseCubeState = (partial: Partial<FirebaseCubeState>) => {
+export const listenForFirebaseSnapshots = <T extends keyof FirebaseCollections>(
+  collection: T,
+  handler: (cube: FirebaseCollections[T] | undefined) => any
+) => {
   const currentUser = firebase.auth().currentUser;
   if (!currentUser) throw new Error(`user must be authenticated`);
-
-  return firebase
+  firebase
     .firestore()
-    .collection("cubes")
+    .collection(collection)
     .doc(currentUser.uid)
-    .update({ ...partial });
+    .onSnapshot((x) => handler(x.data() as any));
+};
+
+export const setFirebaseState = <T extends keyof FirebaseCollections>(
+  collection: T,
+  state: FirebaseCollections[T]
+) => {
+  const currentUser = firebase.auth().currentUser;
+  if (!currentUser) throw new Error(`user must be authenticated`);
+  return firebase.firestore().collection(collection).doc(currentUser.uid).set(state);
+};
+
+export const updateFirebaseState = <T extends keyof FirebaseCollections>(
+  collection: T,
+  partial: Partial<FirebaseCollections[T]>
+) => {
+  const currentUser = firebase.auth().currentUser;
+  if (!currentUser) throw new Error(`user must be authenticated`);
+  return firebase.firestore().collection(collection).doc(currentUser.uid).update(partial);
 };
 
 // Borrowed from: https://firebase.google.com/docs/firestore/solutions/presence

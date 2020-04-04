@@ -1,13 +1,18 @@
 import {
   initFirebase,
-  listenForCubeSnapshots,
   signInToFirebase,
   startReportingPresenceToFirebase,
   signOutOfFirebase,
-  updateFirebaseCubeState,
+  updateFirebaseState,
 } from "./modules/firebase";
 import { config } from "./config/config";
 import { monitorSystemInfo } from "./modules/systemInfo";
+import { initTerminalState, beginRespondingToTerminalCommands } from "./modules/terminal";
+
+const handleError = (e: any) => {
+  console.error(e);
+  process.exit(1);
+};
 
 async function bootstrap() {
   console.log("starting up..");
@@ -22,14 +27,15 @@ async function bootstrap() {
 
   startReportingPresenceToFirebase();
 
+  await initTerminalState();
+  beginRespondingToTerminalCommands();
+
   monitorSystemInfo(
-    (allInfo) => updateFirebaseCubeState({ fullSystemInfoJson: JSON.stringify(allInfo) }),
-    (essentialSystemInfo) => updateFirebaseCubeState({ essentialSystemInfo })
+    (allInfo) => updateFirebaseState("cubes", { fullSystemInfoJson: JSON.stringify(allInfo) }),
+    (essentialSystemInfo) => updateFirebaseState("cubes", { essentialSystemInfo })
   );
 
-  //await new Promise((resolve) => {});
-
-  //process.exit();
+  setInterval(() => {}, 1000);
 }
 
-bootstrap();
+bootstrap().catch(handleError);

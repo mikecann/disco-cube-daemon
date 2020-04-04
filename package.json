@@ -10,7 +10,7 @@
     "dev": "yarn watch",
     "watch": "nodemon -w src/**/*.ts --transpile-only --exec ts-node ./src/index.ts",
     "build": "yarn compile",
-    "start": "nodemon --exec ts-node --transpile-only ./src/index.ts",
+    "start": "ts-node ./src/index.ts",
     "pretty": "prettier --write ./src/**/*.{ts,tsx}"
   },
   "dependencies": {
