@@ -77,7 +77,6 @@ export const startReportingPresenceToFirebase = () => {
     .database()
     .ref(".info/connected")
     .on("value", function (snapshot) {
-      console.log("startReportingPresenceToFirebase -> snapshot", snapshot);
       // If we're not currently connected, don't do anything.
       if (snapshot.val() == false) {
         return;
