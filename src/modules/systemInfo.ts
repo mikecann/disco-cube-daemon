@@ -33,7 +33,9 @@ export const monitorSystemInfo = (
     setTimeout(update, 3000);
   };
 
-  //setTimeout(update, 3000);
+  setTimeout(update, 3000);
+
+  //si.getAllData().then(allInfoCallback);
 
   // Get ALL system info only once
   getStaticData().then(allInfoCallback);
@@ -47,10 +49,11 @@ async function getStaticData() {
     chassis,
     osInfo,
     uuid,
-    // cpuFlags,
-    // graphics,
-    // networkInterfaces,
-    // memLayout,
+    cpuFlags,
+    //graphics,
+    networkInterfaces,
+    memLayout,
+    versions,
   ] = await Promise.all([
     si.system(),
     si.bios(),
@@ -58,16 +61,27 @@ async function getStaticData() {
     si.chassis(),
     si.osInfo(),
     si.uuid(),
-
-    // si.cpuFlags(),
-    // si.graphics(),
-    // si.networkInterfaces(),
-    // si.memLayout(),
-
-    //si.versions(),
-    //si.cpu(),
-    //si.diskLayout(),
+    si.cpuFlags(),
+    //si.graphics(),
+    si.networkInterfaces(),
+    si.memLayout(),
+    si.versions(),
   ]);
 
-  return { system, bios, chassis, uuid }; // cpuFlags, graphics, networkInterfaces, memLayout
+  const [cpu, diskLayout] = await Promise.all([si.cpu(), si.diskLayout()]);
+
+  return {
+    system,
+    bios,
+    cpu,
+    diskLayout,
+    baseboard,
+    osInfo,
+    chassis,
+    uuid,
+    cpuFlags,
+    networkInterfaces,
+    memLayout,
+    versions,
+  }; // graphics,
 }
