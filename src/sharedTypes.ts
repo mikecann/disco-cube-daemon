@@ -21,13 +21,26 @@ export const CubeSystemInfo = (o: {}) => {
 export interface CubeSystemInfo extends ReturnType<typeof CubeSystemInfo> {}
 
 export const TerminalState = (o: {
-  output: string[];
+  history: TerminalCommandExecution[];
+  cwd: string;
   command: string;
-  status: "executing" | "waiting-for-input";
+  status: "waiting" | "executing";
 }) => {
   return { ...o } as const;
 };
 export interface TerminalState extends ReturnType<typeof TerminalState> {}
+
+export const TerminalCommandExecution = (o: {
+  stdout: string;
+  stderr: string;
+  command: string;
+  error: string;
+  cwd: string;
+  status: "executing" | "executed";
+}) => {
+  return { ...o } as const;
+};
+export interface TerminalCommandExecution extends ReturnType<typeof TerminalCommandExecution> {}
 
 export type FirebaseCollections = {
   cubes: FirebaseCubeState;
