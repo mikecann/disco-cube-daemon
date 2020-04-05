@@ -61,7 +61,7 @@ export const beginRespondingToTerminalCommands = () => {
 const executeCommand = async (command: string, cwd: string) => {
   return new Promise<{ error: string; stdout: string; stderr: string }>((resolve) => {
     console.log(`executing command '${command}'`);
-    const proc = exec(command, { cwd }, (error, stdout, stderr) => {
+    exec(command, { cwd }, (error, stdout, stderr) => {
       console.log(`command finished`, { error, stdout, stderr });
       resolve({ error: error ? error + "" : "", stdout, stderr });
     });
