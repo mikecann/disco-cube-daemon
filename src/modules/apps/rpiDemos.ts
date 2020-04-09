@@ -17,7 +17,15 @@ export const startRpiDemo = (demoId: string) => {
 
   let proc: ChildProcessWithoutNullStreams | undefined = undefined;
   try {
-    proc = spawn(command, {});
+    proc = spawn(`sudo`, [
+      `${executablePath}/examples-api-use/demo`,
+      `-${demoId}`,
+      `--led-rows=64`,
+      `--led-cols=64`,
+      `--led-chain=2`,
+      `--led-parallel=3`,
+      `--led-slowdown-gpio=2`,
+    ]);
 
     proc.stdout.on("data", (data) => {
       logger.debug(`rpi demo stdout: ${data}`);
