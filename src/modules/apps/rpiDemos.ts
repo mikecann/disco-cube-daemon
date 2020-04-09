@@ -11,28 +11,28 @@ export const startRpiDemo = (demoId: string) => {
 
   const command = `sudo ${executablePath}/examples-api-use/demo -${demoId} --led-rows=64 --led-cols=64 --led-chain=1 --led-parallel=1 --led-slowdown-gpio=2`;
 
-  const proc = exec(command, (error, stdout, stderr) => {
-    logger.debug(`command finished`, { error, stdout, stderr });
-  });
+  // const proc = exec(command, (error, stdout, stderr) => {
+  //   logger.debug(`command finished`, { error, stdout, stderr });
+  // });
 
-  // let proc: ChildProcessWithoutNullStreams | undefined = undefined;
-  // try {
-  //   proc = spawn(command, {});
+  let proc: ChildProcessWithoutNullStreams | undefined = undefined;
+  try {
+    proc = spawn(command, {});
 
-  //   proc.stdout.on("data", (data) => {
-  //     logger.debug(`rpi demo stdout: ${data}`);
-  //   });
+    proc.stdout.on("data", (data) => {
+      logger.debug(`rpi demo stdout: ${data}`);
+    });
 
-  //   proc.stderr.on("data", (data) => {
-  //     logger.error(`stderr: ${data}`);
-  //   });
+    proc.stderr.on("data", (data) => {
+      logger.error(`stderr: ${data}`);
+    });
 
-  //   proc.on("close", (code) => {
-  //     logger.debug(`child process exited with code ${code}`);
-  //   });
-  // } catch (e) {
-  //   logger.error(`rpi demo spawn error`, e);
-  // }
+    proc.on("close", (code) => {
+      logger.debug(`child process exited with code ${code}`);
+    });
+  } catch (e) {
+    logger.error(`rpi demo spawn error`, e);
+  }
 
   return () => {
     logger.debug(`stopping rpi demo`);
