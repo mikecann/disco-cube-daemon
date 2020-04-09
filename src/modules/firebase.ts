@@ -3,6 +3,9 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/database";
 import { FirebaseCollections } from "../sharedTypes";
+import * as log4js from 'log4js';
+
+const logger = log4js.getLogger(`firebase`);
 
 const config = {
   apiKey: "AIzaSyCNZOxJQX8x5-z2iWyMLCkKZ6sQjkaGZR8",

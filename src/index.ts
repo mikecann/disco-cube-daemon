@@ -9,6 +9,7 @@ import { config } from "./config/config";
 import { monitorSystemInfo } from "./modules/systemInfo";
 import { initTerminalState, beginRespondingToTerminalCommands } from "./modules/terminal";
 import { initAppState, startAppService } from "./modules/apps";
+import { logger } from "./utils/logging";
 
 const handleError = (e: any) => {
   console.error(e);
@@ -16,15 +17,15 @@ const handleError = (e: any) => {
 };
 
 async function bootstrap() {
-  console.log("starting up..");
+  logger.info("starting up..");
 
   initFirebase();
 
-  console.log(`authenticating..`);
+  logger.info(`authenticating..`);
 
   await signInToFirebase(config.FIREBASE_EMAIL, config.FIREBASE_PASSWORD);
 
-  console.log("authenticated");
+  logger.info("authenticated");
 
   startReportingPresenceToFirebase();
 

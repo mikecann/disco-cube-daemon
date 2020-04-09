@@ -1,5 +1,8 @@
 import { CubeSystemInfo, EssentialSystemInfo } from "../sharedTypes";
 import * as si from "systeminformation";
+import * as log4js from "log4js";
+
+const logger = log4js.getLogger(`system-info`);
 
 const updateRateMs = 5000;
 

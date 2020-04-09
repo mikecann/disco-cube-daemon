@@ -2,6 +2,9 @@ import { setFirebaseState, listenForFirebaseSnapshots, updateFirebaseState } fro
 import { exec } from "child_process";
 import { TerminalCommandExecution } from "../sharedTypes";
 import * as path from "path";
+import * as log4js from "log4js";
+
+const logger = log4js.getLogger(`terminal`);
 
 export const initTerminalState = () =>
   setFirebaseState("terminals", {
@@ -60,9 +63,9 @@ export const beginRespondingToTerminalCommands = () => {
 
 const executeCommand = async (command: string, cwd: string) => {
   return new Promise<{ error: string; stdout: string; stderr: string }>((resolve) => {
-    console.log(`executing command '${command}'`);
+    logger.debug(`executing command '${command}'`);
     exec(command, { cwd }, (error, stdout, stderr) => {
-      console.log(`command finished`, { error, stdout, stderr });
+      logger.debug(`command finished`, { error, stdout, stderr });
       resolve({ error: error ? error + "" : "", stdout, stderr });
     });
   });
