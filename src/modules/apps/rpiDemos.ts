@@ -1,6 +1,7 @@
 import { spawn, ChildProcessWithoutNullStreams, exec } from "child_process";
 import { RpiDemosState } from "../../sharedTypes";
 import * as log4js from "log4js";
+import kill from "tree-kill";
 
 const executablePath = `/home/pi/rpi-rgb-led-matrix`;
 
@@ -44,7 +45,6 @@ export const startRpiDemo = (demoId: string) => {
 
   return () => {
     logger.debug(`stopping rpi demo`);
-
-    if (proc) proc.kill("SIGINT");
+    if (proc) kill(proc.pid);
   };
 };
