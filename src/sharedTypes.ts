@@ -45,4 +45,52 @@ export interface TerminalCommandExecution extends ReturnType<typeof TerminalComm
 export type FirebaseCollections = {
   cubes: FirebaseCubeState;
   terminals: TerminalState;
+  apps: AppsState;
 };
+
+export type Apps = {
+  rpiDemos: RpiDemosState;
+  paint: PaintAppState;
+};
+
+export type AppNames = keyof Apps;
+export type AppStates = Apps[AppNames];
+
+export const AppsState = (o: { command: AppsCommands | null; runningApp: AppExecution | null }) => {
+  return { ...o } as const;
+};
+export interface AppsState extends ReturnType<typeof AppsState> {}
+
+export const AppExecution = (o: {
+  name: AppNames;
+  state: AppStates;
+  status: "not-started" | "running";
+  stdout: string;
+  stderr: string;
+  error: string;
+}) => {
+  return { ...o } as const;
+};
+export interface AppExecution extends ReturnType<typeof AppExecution> {}
+
+export const RpiDemosState = (o: {}) => {
+  return { ...o } as const;
+};
+export interface RpiDemosState extends ReturnType<typeof RpiDemosState> {}
+
+export const PaintAppState = (o: {}) => {
+  return { ...o } as const;
+};
+export interface PaintAppState extends ReturnType<typeof PaintAppState> {}
+
+export type AppsCommands = StartRPIDemosCommand | StopRunningAppCommand;
+
+export const StartRPIDemosCommand = (o: { demoId: string }) => {
+  return { kind: "start-rpi-demos", ...o } as const;
+};
+export interface StartRPIDemosCommand extends ReturnType<typeof StartRPIDemosCommand> {}
+
+export const StopRunningAppCommand = (o: {}) => {
+  return { kind: "stop-app", ...o } as const;
+};
+export interface StopRunningAppCommand extends ReturnType<typeof StopRunningAppCommand> {}

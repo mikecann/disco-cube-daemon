@@ -8,6 +8,7 @@ import {
 import { config } from "./config/config";
 import { monitorSystemInfo } from "./modules/systemInfo";
 import { initTerminalState, beginRespondingToTerminalCommands } from "./modules/terminal";
+import { initAppState, startAppService } from "./modules/apps";
 
 const handleError = (e: any) => {
   console.error(e);
@@ -27,9 +28,15 @@ async function bootstrap() {
 
   startReportingPresenceToFirebase();
 
+  // Terminal
   await initTerminalState();
   beginRespondingToTerminalCommands();
 
+  // Apps
+  await initAppState();
+  startAppService();
+
+  // System infos
   monitorSystemInfo(
     (allInfo) => updateFirebaseState("cubes", { fullSystemInfoJson: JSON.stringify(allInfo) }),
     (essentialSystemInfo) => updateFirebaseState("cubes", { essentialSystemInfo })

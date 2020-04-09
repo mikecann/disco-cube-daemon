@@ -1,6 +1,8 @@
 import { CubeSystemInfo, EssentialSystemInfo } from "../sharedTypes";
 import * as si from "systeminformation";
 
+const updateRateMs = 5000;
+
 export const monitorSystemInfo = (
   allInfoCallback: (info: CubeSystemInfo) => any,
   essentialInfoCallback: (info: EssentialSystemInfo) => any
@@ -13,12 +15,6 @@ export const monitorSystemInfo = (
       si.battery(),
     ]);
 
-    //const cpu = await si.cpu();
-
-    //console.log("\n\n");
-
-    //console.log(cpuLoad);
-
     const essential = EssentialSystemInfo({
       cpuLoadsPercent: currentLoad.cpus.map((c) => c.load),
       memUsagePercent: (mem.used / mem.total) * 100,
@@ -26,21 +22,19 @@ export const monitorSystemInfo = (
       batteryLevelPercentage: battery.percent,
     });
 
-    //console.log("essential", essential);
-
     essentialInfoCallback(essential);
 
-    setTimeout(update, 3000);
+    setTimeout(update, updateRateMs);
   };
 
-  setTimeout(update, 3000);
-
-  //si.getAllData().then(allInfoCallback);
+  setTimeout(update, updateRateMs);
 
   // Get ALL system info only once
   getStaticData().then(allInfoCallback);
 };
 
+// Have to use this rather than the built in function because it has an issue exiting
+// the process when you use powershell as your terminal, I believe it is the graphics module
 async function getStaticData() {
   const [
     system,
