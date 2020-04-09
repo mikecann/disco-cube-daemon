@@ -2,7 +2,8 @@ import { updateFirebaseState, listenForFirebaseSnapshots, setFirebaseState } fro
 import { AppExecution, RpiDemosState } from "../sharedTypes";
 import { exec } from "child_process";
 import { startRpiDemo } from "./apps/rpiDemos";
-import * as log4js from 'log4js';
+import * as log4js from "log4js";
+import { log } from "util";
 
 const logger = log4js.getLogger(`apps`);
 
@@ -15,6 +16,8 @@ export const initAppState = () =>
 export const startAppService = () => {
   let stopApp: (() => any) | undefined = undefined;
 
+  logger.debug(`listening for snapshots`);
+
   listenForFirebaseSnapshots("apps", async (state) => {
     if (!state) return;
     if (!state.command) return;
@@ -24,8 +27,6 @@ export const startAppService = () => {
     logger.debug(`handling command`, command);
 
     if (command.kind == "start-rpi-demos") {
-      
-      //new RpiDemoExecution(state.command.demoId);
       stopApp = startRpiDemo(command.demoId);
       updateFirebaseState("apps", {
         command: null,

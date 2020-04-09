@@ -17,6 +17,8 @@ export const initTerminalState = () =>
 const maxItemsInHistory = 5;
 
 export const beginRespondingToTerminalCommands = () => {
+  logger.debug(`listening for snapshots`);
+
   listenForFirebaseSnapshots("terminals", async (state) => {
     if (!state) return;
 
