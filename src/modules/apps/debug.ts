@@ -3,17 +3,34 @@ import { LedMatrix, GpioMapping, LedMatrixUtils, PixelMapperType } from 'rpi-led
 
 const logger = log4js.getLogger(`rpiDemo`);
 
+class Pulser {
+  constructor(
+    readonly x: number,
+    readonly y: number,
+    readonly f: number
+  ) { }
+
+  nextColor(t: number): number {
+    /** You could easily work position-dependent logic into this expression */
+    const brightness = 0xFF & Math.max(0, (255 * (Math.sin(this.f * t / 1000))));
+
+    return (brightness << 16) | (brightness << 8) | brightness;
+  }
+}
+
+
 export const startDebugApp = () => {
   logger.debug(`starting debug`);
 
   const matrix = new LedMatrix(
     {
       ...LedMatrix.defaultMatrixOptions(),
-      rows: 32,
+      rows: 64,
       cols: 64,
       chainLength: 2,
-      hardwareMapping: GpioMapping.AdafruitHatPwm,
-      pixelMapperConfig: LedMatrixUtils.encodeMappers({ type: PixelMapperType.U }),
+      parallel: 3,
+      //hardwareMapping: GpioMapping.AdafruitHatPwm,
+      //pixelMapperConfig: LedMatrixUtils.encodeMappers({ type: PixelMapperType.U }),
     },
     {
       ...LedMatrix.defaultRuntimeOptions(),
@@ -21,23 +38,59 @@ export const startDebugApp = () => {
     }
   );
 
-  matrix
-    .clear()            // clear the display
-    .brightness(100)    // set the panel brightness to 100%
-    .fgColor(0x0000FF)  // set the active color to blue
-    .fill()             // color the entire diplay blue
-    .fgColor(0xFFFF00)  // set the active color to yellow
-    // draw a yellow circle around the display
-    .drawCircle(matrix.width() / 2, matrix.height() / 2, matrix.width() / 2 - 1)
-    // draw a yellow rectangle
-    .drawRect(matrix.width() / 4, matrix.height() / 4, matrix.width() / 2, matrix.height() / 2)
-    // sets the active color to red
+  matrix.clear().brightness(100);
+
+  // const makeSide = () => {
+  //   const color = Math.floor(Math.random() * 0xFFFFFF)
+  //   return [...Array(64 * 64 * 3).keys()].map(() => color)
+  // }
+
+  // const buffer = Buffer.of(...[
+  //   ...makeSide(),
+  //   ...makeSide(),
+  //   ...makeSide(),
+  //   ...makeSide(),
+  //   ...makeSide(),
+  //   ...makeSide()
+  // ]
+  // );
+
+  // matrix.drawBuffer(buffer).sync();
+
+  matrix.fgColor(0xFFFFFF)
+
+    // .bgColor({ r: 255, g: 0, b: 0 })
     .fgColor({ r: 255, g: 0, b: 0 })
-    // draw two diagonal red lines connecting the corners
-    .drawLine(0, 0, matrix.width(), matrix.height())
-    .drawLine(matrix.width() - 1, 0, 0, matrix.height() - 1);
+    .drawRect(0, 0, 64, 64)
+    .fill()
+
+    // .bgColor({ r: 255, g: 255, b: 0 })
+    .fgColor({ r: 255, g: 255, b: 0 })
+    .drawRect(64, 0, 64, 64)
+    .fill()
+
+    // .bgColor({ r: 255, g: 0, b: 255 })
+    .fgColor({ r: 255, g: 0, b: 255 })
+    .drawRect(128, 0, 64, 64)
+    .fill()
+
+    // .bgColor({ r: 255, g: 255, b: 255 })
+    .fgColor({ r: 255, g: 255, b: 255 })
+    .drawRect(0, 64, 64, 64)
+    .fill()
+
+    // .bgColor({ r: 0, g: 255, b: 0 })
+    .fgColor({ r: 0, g: 255, b: 0 })
+    .drawRect(64, 64, 64, 64)
+    .fill()
+
+    // .bgColor({ r: 0, g: 255, b: 255 })
+    .fgColor({ r: 0, g: 255, b: 255 })
+    .drawRect(128, 64, 64, 64)
+    .fill()
 
   matrix.sync();
+
 
   return () => {
     logger.debug(`stopping debug app`);
