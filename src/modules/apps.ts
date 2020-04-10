@@ -1,9 +1,10 @@
 import { updateFirebaseState, listenForFirebaseSnapshots, setFirebaseState } from "./firebase";
-import { AppExecution, RpiDemosState } from "../sharedTypes";
+import { AppExecution, RpiDemosState, DebugAppState } from "../sharedTypes";
 import { exec } from "child_process";
 import { startRpiDemo } from "./apps/rpiDemos";
 import * as log4js from "log4js";
 import { log } from "util";
+import { startDebugApp } from "./apps/debug";
 
 const logger = log4js.getLogger(`apps`);
 
@@ -34,6 +35,21 @@ export const startAppService = () => {
           error: "",
           name: "rpiDemos",
           state: RpiDemosState({}),
+          status: "running",
+          stderr: "",
+          stdout: "",
+        }),
+      });
+    }
+
+    if (command.kind == "start-debug-app") {
+      stopApp = startDebugApp();
+      updateFirebaseState("apps", {
+        command: null,
+        runningApp: AppExecution({
+          error: "",
+          name: "debug",
+          state: DebugAppState({}),
           status: "running",
           stderr: "",
           stdout: "",
