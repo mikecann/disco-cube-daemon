@@ -2,21 +2,20 @@ import {
   initFirebase,
   signInToFirebase,
   startReportingPresenceToFirebase,
-  signOutOfFirebase,
   updateFirebaseState,
 } from "./modules/firebase";
 import { config } from "./config/config";
 import { monitorSystemInfo } from "./modules/systemInfo";
 import { initTerminalState, beginRespondingToTerminalCommands } from "./modules/terminal";
 import { initAppState, startAppService } from "./modules/apps";
-import { logger } from "./utils/logging";
+import { setupShutdown } from "./utils/shutdown";
+import * as log4js from "log4js";
 
-const handleError = (e: any) => {
-  console.error(e);
-  process.exit(1);
-};
+const logger = log4js.getLogger(`bootstrap`);
 
 async function bootstrap() {
+  setupShutdown();
+
   logger.info("starting up..");
 
   initFirebase();
@@ -46,8 +45,7 @@ async function bootstrap() {
   setInterval(() => {}, 1000);
 }
 
-bootstrap().catch(handleError);
-
-var cleanExit = function() { process.exit(0) };
-process.on('SIGINT', cleanExit); // catch ctrl-c
-process.on('SIGTERM', cleanExit); // catch kill
+bootstrap().catch((e: any) => {
+  logger.error(`bootstrap caught error`, e);
+  process.exit(1);
+});

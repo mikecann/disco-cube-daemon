@@ -1,6 +1,7 @@
 import { CubeSystemInfo, EssentialSystemInfo } from "../sharedTypes";
 import * as si from "systeminformation";
 import * as log4js from "log4js";
+import { isStopped } from "../utils/shutdown";
 
 const logger = log4js.getLogger(`system-info`);
 
@@ -27,7 +28,7 @@ export const monitorSystemInfo = (
 
     essentialInfoCallback(essential);
 
-    if (process.exitCode != undefined) setTimeout(update, updateRateMs);
+    if (!isStopped) setTimeout(update, updateRateMs);
   };
 
   setTimeout(update, updateRateMs);
