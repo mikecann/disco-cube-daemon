@@ -10,6 +10,9 @@ import { initTerminalState, beginRespondingToTerminalCommands } from "./modules/
 import { initAppState, startAppService } from "./modules/apps";
 import { setupShutdown } from "./utils/shutdown";
 import * as log4js from "log4js";
+import { configLogger } from "./utils/logging";
+
+configLogger();
 
 const logger = log4js.getLogger(`bootstrap`);
 
