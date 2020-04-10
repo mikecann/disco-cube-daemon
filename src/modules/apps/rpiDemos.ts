@@ -25,6 +25,7 @@ export const startRpiDemo = (demoId: string) => {
       `--led-cols=64`,
       `--led-chain=2`,
       `--led-parallel=3`,
+      // `--led-brightness=80`,
       `--led-slowdown-gpio=2`,
     ]);
 

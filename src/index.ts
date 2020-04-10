@@ -11,12 +11,21 @@ import { initAppState, startAppService } from "./modules/apps";
 import { setupShutdown } from "./utils/shutdown";
 import * as log4js from "log4js";
 import { configLogger } from "./utils/logging";
+import { isRoot } from "./utils/misc";
 
 configLogger();
 
 const logger = log4js.getLogger(`bootstrap`);
 
 async function bootstrap() {
+  logger.info(` `);
+  logger.info(`starting up ...`);
+
+  if (!isRoot()) {
+    logger.error(`must be run as root user (sudo)`);
+    process.exit(1);
+  }
+
   const app = initFirebase();
 
   setupShutdown(() => {
@@ -47,7 +56,7 @@ async function bootstrap() {
     (essentialSystemInfo) => updateFirebaseState("cubes", { essentialSystemInfo })
   );
 
-  setInterval(() => {}, 1000);
+  setInterval(() => { }, 1000);
 }
 
 bootstrap().catch((e: any) => {
