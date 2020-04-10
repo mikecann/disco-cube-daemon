@@ -48,6 +48,6 @@ async function bootstrap() {
 
 bootstrap().catch(handleError);
 
-var cleanExit = function() { process.exit() };
+var cleanExit = function() { process.exit(0) };
 process.on('SIGINT', cleanExit); // catch ctrl-c
 process.on('SIGTERM', cleanExit); // catch kill

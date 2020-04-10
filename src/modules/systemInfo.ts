@@ -27,7 +27,9 @@ export const monitorSystemInfo = (
 
     essentialInfoCallback(essential);
 
-    setTimeout(update, updateRateMs);
+    
+    if (process.exitCode != undefined)
+      setTimeout(update, updateRateMs);
   };
 
   setTimeout(update, updateRateMs);
