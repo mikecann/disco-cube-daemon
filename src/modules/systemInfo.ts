@@ -12,18 +12,16 @@ export const monitorSystemInfo = (
   essentialInfoCallback: (info: EssentialSystemInfo) => any
 ) => {
   const update = async () => {
-    const [currentLoad, mem, cpuTemperature, battery] = await Promise.all([
+    const [currentLoad, mem, cpuTemperature] = await Promise.all([
       si.currentLoad(),
       si.mem(),
       si.cpuTemperature(),
-      si.battery(),
     ]);
 
     const essential = EssentialSystemInfo({
       cpuLoadsPercent: currentLoad.cpus.map((c) => c.load),
       memUsagePercent: (mem.used / mem.total) * 100,
-      cpuTemperature: cpuTemperature.main,
-      batteryLevelPercentage: battery.percent,
+      cpuTemperature: cpuTemperature.main
     });
 
     essentialInfoCallback(essential);

@@ -17,11 +17,13 @@ configLogger();
 const logger = log4js.getLogger(`bootstrap`);
 
 async function bootstrap() {
-  setupShutdown();
+  const app = initFirebase();
+
+  setupShutdown(() => {
+    app.delete();
+  });
 
   logger.info("starting up..");
-
-  initFirebase();
 
   logger.info(`authenticating..`);
 

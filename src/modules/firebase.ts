@@ -3,7 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/database";
 import { FirebaseCollections } from "../sharedTypes";
-import * as log4js from 'log4js';
+import * as log4js from "log4js";
 
 const logger = log4js.getLogger(`firebase`);
 
@@ -18,9 +18,7 @@ const config = {
   measurementId: "G-D9SX9GEWJY",
 };
 
-export const initFirebase = () => {
-  firebase.initializeApp(config);
-};
+export const initFirebase = () => firebase.initializeApp(config);
 
 export const signInToFirebase = (email: string, password: string) =>
   firebase.auth().signInWithEmailAndPassword(email, password);
@@ -63,6 +61,8 @@ export const updateFirebaseState = <T extends keyof FirebaseCollections>(
 
 // Borrowed from: https://firebase.google.com/docs/firestore/solutions/presence
 export const startReportingPresenceToFirebase = () => {
+  logger.debug(`starting to report presenese`);
+
   const currentUser = firebase.auth().currentUser;
   if (!currentUser) throw new Error(`user must be authenticated`);
 
@@ -93,6 +93,8 @@ export const startReportingPresenceToFirebase = () => {
     .database()
     .ref(".info/connected")
     .on("value", function (snapshot) {
+      logger.debug(`database connected`, snapshot.val());
+
       // If we're not currently connected, don't do anything.
       if (snapshot.val() == false) {
         return;
@@ -110,6 +112,8 @@ export const startReportingPresenceToFirebase = () => {
           // resolve as soon as the server acknowledges the onDisconnect()
           // request, NOT once we've actually disconnected:
           // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
+
+          logger.debug(`fully online`);
 
           // We can now safely set ourselves as 'online' knowing that the
           // server will mark us as offline once we lose connection.
