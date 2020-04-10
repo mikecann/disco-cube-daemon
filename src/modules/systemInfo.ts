@@ -27,12 +27,11 @@ export const monitorSystemInfo = (
 
     essentialInfoCallback(essential);
 
-    
-    if (process.exitCode != undefined)
-      setTimeout(update, updateRateMs);
+    if (process.exitCode != undefined) setTimeout(update, updateRateMs);
   };
 
   setTimeout(update, updateRateMs);
+  update();
 
   // Get ALL system info only once
   getStaticData().then(allInfoCallback);
