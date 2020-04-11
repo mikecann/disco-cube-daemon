@@ -1,27 +1,15 @@
 import { LedMatrix, LedMatrixUtils, Font, LedMatrixInstance, PixelMapperType } from "rpi-led-matrix";
 import { hang } from "../utils/misc";
+import { createMatrix } from "../utils/matrix";
 
 const sideLength = 64;
 
 async function bootstrap() {
-  const matrix = new LedMatrix(
-    {
-      ...LedMatrix.defaultMatrixOptions(),
-      rows: sideLength,
-      cols: sideLength,
-      chainLength: 2,
-      parallel: 3,
-      pixelMapperConfig: LedMatrixUtils.encodeMappers({ type: PixelMapperType.U }),
-    },
-    {
-      ...LedMatrix.defaultRuntimeOptions(),
-      gpioSlowdown: 2,
-    }
-  );
+  const matrix = createMatrix();
 
   console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
 
-  matrix.clear().brightness(100);
+  matrix.clear();
 
   matrix.font(new Font('helvR12', `${process.cwd()}/fonts/spleen-16x32.bdf`));
 

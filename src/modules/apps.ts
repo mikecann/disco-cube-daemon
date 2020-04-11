@@ -67,6 +67,7 @@ const apps: Record<AppNames, (args: string[]) => RunningApp> = {
     ...args
   ]),
 
+  sparkle: startNodeApp(`sparkle`),
   debug: startNodeApp(`debug`),
   paint: startNodeApp(`paint`),
 }

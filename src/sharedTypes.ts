@@ -71,6 +71,7 @@ export type Apps = {
   rpiDemos: AppState;
   paint: PaintAppState;
   debug: AppState;
+  sparkle: AppState;
 };
 
 export type AppNames = keyof Apps;

@@ -11,8 +11,7 @@
     "watch:nodemon": "nodemon -w dist/**/*.* ./dist/index.js",
     "build": "yarn compile",
     "start": "node ./dist/index.js",
-    "pretty": "prettier --write ./src/**/*.{ts,tsx}",
-    "sparkle": "node ./dist/apps/sparkle.js"
+    "pretty": "prettier --write ./src/**/*.{ts,tsx}"
   },
   "dependencies": {
     "@types/node": "^13.9.5",
