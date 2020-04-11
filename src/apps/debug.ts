@@ -1,6 +1,5 @@
 import { LedMatrix, LedMatrixUtils, Font, LedMatrixInstance, PixelMapperType } from "rpi-led-matrix";
-
-const wait = (t: number) => new Promise(ok => setTimeout(ok, t));
+import { hang } from "../utils/misc";
 
 const sideLength = 64;
 
@@ -30,7 +29,7 @@ async function bootstrap() {
   drawBorders(matrix);
   drawSideNumber(matrix);
 
-  await wait(999999999);
+  await hang();
 }
 
 const fillSides = (matrix: LedMatrixInstance) => {

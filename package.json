@@ -12,7 +12,7 @@
     "build": "yarn compile",
     "start": "node ./dist/index.js",
     "pretty": "prettier --write ./src/**/*.{ts,tsx}",
-    "debugApp": "ts-node --transpile-only ./src/apps/debug.ts"
+    "sparkle": "node ./dist/apps/sparkle.js"
   },
   "dependencies": {
     "@types/node": "^13.9.5",
