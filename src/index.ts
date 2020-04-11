@@ -19,7 +19,7 @@ const logger = log4js.getLogger(`bootstrap`);
 
 async function bootstrap() {
   logger.info(` `);
-  logger.info(`starting up...`);
+  logger.info(`starting up...`, { cwd: process.cwd() });
 
   if (!isRoot()) {
     logger.error(`must be run as root user (sudo)`);

@@ -26,3 +26,5 @@ yarn-error.log*
 local.config.json
 
 output.log
+
+/dist

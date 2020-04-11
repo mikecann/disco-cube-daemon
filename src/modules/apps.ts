@@ -1,10 +1,10 @@
 import { updateFirebaseState, listenForFirebaseSnapshots, setFirebaseState } from "./firebase";
 import { AppExecution, RpiDemosState, DebugAppState } from "../sharedTypes";
 import { exec } from "child_process";
-import { startRpiDemo } from "./apps/rpiDemos";
+import { startRpiDemo } from "./rpiDemos/rpiDemos";
 import * as log4js from "log4js";
 import { log } from "util";
-import { startDebugApp } from "./apps/debug";
+import { startDebugApp } from "./debug/debug";
 
 const logger = log4js.getLogger(`apps`);
 

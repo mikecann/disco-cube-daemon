@@ -7,11 +7,12 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc --noEmit",
-    "dev": "yarn watch",
-    "watch": "nodemon -w src/**/*.ts --transpile-only --exec ts-node ./src/index.ts",
+    "dev": "tsc -w",
+    "watch:nodemon": "nodemon -w dist/**/*.* ./dist/index.js",
     "build": "yarn compile",
-    "start": "ts-node --transpile-only ./src/index.ts",
-    "pretty": "prettier --write ./src/**/*.{ts,tsx}"
+    "start": "node ./dist/index.js",
+    "pretty": "prettier --write ./src/**/*.{ts,tsx}",
+    "debugApp": "ts-node --transpile-only ./src/apps/debug.ts"
   },
   "dependencies": {
     "@types/node": "^13.9.5",
