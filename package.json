@@ -14,13 +14,17 @@
     "pretty": "prettier --write ./src/**/*.{ts,tsx}"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.150",
     "@types/node": "^13.9.5",
+    "@types/serialport": "^8.0.0",
     "@types/systeminformation": "^3.54.1",
     "effector": "^20.13.4",
     "firebase": "^7.13.1",
+    "lodash": "^4.17.15",
     "log4js": "^6.1.2",
     "nodemon": "^2.0.2",
     "rpi-led-matrix": "^1.9.0",
+    "serialport": "^8.0.7",
     "systeminformation": "^4.23.1",
     "tree-kill": "^1.2.2",
     "ts-node": "^8.8.1",
