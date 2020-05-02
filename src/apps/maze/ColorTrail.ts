@@ -22,8 +22,7 @@ export class ColorTrail {
 
     for (let i = 0; i < this.segments.length; i++) {
       const color = multiplyColor(this.color, step * i);
-      matrix.fgColor(color);
-      this.maze.renderPixel(this.segments[i], matrix);
+      matrix.fgColor(color).setPixel(this.segments[i].x, this.segments[i].y);
     }
 
   }

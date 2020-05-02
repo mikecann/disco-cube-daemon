@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { Point2D } from './Point2D';
 import { LedMatrixInstance } from 'rpi-led-matrix';
 import { rgbToHex } from '../../utils/rendering';
+import { narray } from '../../utils/misc';
 
 function mergeSetWith(row: Row, oldSet: number, newSet: number) {
   const setToMerge = _.filter(row, { set: oldSet });
@@ -76,13 +77,16 @@ export type Cell = {
 
 export type Row = Cell[];
 
+
+
 export class Maze {
 
-  public rows: Row[] = [];
+  public rows: Row[];
 
-  constructor(public width = 8, public height = width, public closed = true) {
+  constructor(public width: number, public height: number, public closed = true) {
     const rows: Row[] = [];
     const range = _.range(width);
+
 
     // Populate maze with empty cells:
     for (let y = 0; y < height; y += 1) {
@@ -116,74 +120,4 @@ export class Maze {
   getRandomPoint() {
     return new Point2D(Math.floor(Math.random() * this.width), Math.floor(Math.random() * this.height))
   }
-
-  renderWalls(matrix: LedMatrixInstance) {
-    for (let y = 0; y < this.rows.length; y++) {
-      const row = this.rows[y];
-      for (let x = 0; x < row.length; x++) {
-        const cell = row[x];
-
-        const cellXInPixels = 2 + (x * 2);
-        const cellYInPixels = 2 + (y * 2);
-
-        matrix.fgColor(rgbToHex(100, 100, 100));
-
-        if (cell.left) {
-          matrix.setPixel(cellXInPixels - 1, cellYInPixels - 1);
-          matrix.setPixel(cellXInPixels - 1, cellYInPixels);
-          matrix.setPixel(cellXInPixels - 1, cellYInPixels + 1);
-        }
-
-        if (cell.right) {
-          matrix.setPixel(cellXInPixels + 1, cellYInPixels - 1)
-          matrix.setPixel(cellXInPixels + 1, cellYInPixels)
-          matrix.setPixel(cellXInPixels + 1, cellYInPixels + 1)
-        }
-
-
-        if (cell.top) {
-          matrix.setPixel(cellXInPixels - 1, cellYInPixels - 1);
-          matrix.setPixel(cellXInPixels, cellYInPixels - 1);
-          matrix.setPixel(cellXInPixels + 1, cellYInPixels - 1);
-        }
-
-        if (cell.bottom) {
-          matrix.setPixel(cellXInPixels - 1, cellYInPixels + 1)
-          matrix.setPixel(cellXInPixels, cellYInPixels + 1)
-          matrix.setPixel(cellXInPixels + 1, cellYInPixels + 1)
-        }
-      }
-    }
-  }
-
-  renderPixel(cellPos: Point2D, matrix: LedMatrixInstance) {
-    const cellXInPixels = 2 + (cellPos.x * 2);
-    const cellYInPixels = 2 + (cellPos.y * 2);
-    matrix.setPixel(cellXInPixels, cellYInPixels);
-  }
-
-  getCell(pos: Point2D) {
-    const cell = this.rows[pos.y][pos.x];
-    if (!cell) throw new Error(`pos out of cell bounds '${pos}'`);
-    return cell;
-  }
-
-  canPass(fromPos: Point2D, velocity: Point2D) {
-    const cell = this.getCell(fromPos);
-
-    if (cell.top && velocity.y < 0)
-      return false;
-
-    if (cell.bottom && velocity.y > 0)
-      return false;
-
-    if (cell.left && velocity.x < 0)
-      return false;
-
-    if (cell.right && velocity.x > 0)
-      return false;
-
-    return true;
-  }
-
 }

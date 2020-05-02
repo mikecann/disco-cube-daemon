@@ -11,6 +11,22 @@ export class Point2D {
     return `${this.x}, ${this.y}`
   }
 
-  public static zero = () => new Point2D();
+  public isOppositeDirectionTo(p2: Point2D) {
+    if (this.x == -1 && p2.x == 1) return true;
+    if (this.y == -1 && p2.y == 1) return true;
+    if (this.x == 1 && p2.x == -1) return true;
+    if (this.y == 1 && p2.y == -1) return true;
+    return false;
+  }
+
+  public static readonly zero = new Point2D();
+  public static readonly north = new Point2D(0, -1);
+  public static readonly south = new Point2D(0, -1);
+  public static readonly east = new Point2D(-1, 0);
+  public static readonly west = new Point2D(1, 0);
+
+  public static readonly directions: ReadonlyArray<Point2D> =
+    [Point2D.north, Point2D.south, Point2D.east, Point2D.west]
+
   public static randomDirection = () => new Point2D(Math.random() < 0.5 ? -1 : 1, Math.random() < 0.5 ? -1 : 1);
 }

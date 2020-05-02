@@ -29,12 +29,12 @@ export class Game {
     const cellsH = ((sideLength * 6) / 2) - 1
     this.maze = new Maze(cellsW, cellsH);
 
-    this.spiders = narray(10).map(_ => new Spider(this));
+    this.spiders = narray(1).map(_ => new Spider(this));
     this.spawnPoint = this.maze.getRandomPoint();
     this.mrNibbles = new MrNibbles(this);
     this.superNibbles = narray(10).map(_ => new SuperNibble(this.maze, this.maze.getRandomPoint()))
-    this.nibbles = this.maze.rows.map(row => row.map(cell =>
-      new Nibble(this.maze, new Point2D(cell.x, cell.y)))
+    this.nibbles = this.maze.collision.map((row, y) => row.filter(c => c == true).map((cell, x) =>
+      new Nibble(this.maze, new Point2D(x, y)))
     ).flat();
   }
 

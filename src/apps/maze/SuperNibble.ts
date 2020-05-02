@@ -7,7 +7,7 @@ import { rgbToHex } from "../../utils/rendering";
 export class SuperNibble {
 
 
-  constructor(private maze: Maze, public position = Point2D.zero()) { }
+  constructor(private maze: Maze, public position = Point2D.zero) { }
 
   update() {
 
@@ -15,9 +15,7 @@ export class SuperNibble {
 
   render(matrix: LedMatrixInstance) {
     const color = rgbToHex(0, 255, 0);
-    matrix.fgColor(color);
-
-    this.maze.renderPixel(this.position, matrix);
+    matrix.fgColor(color).setPixel(this.position.x, this.position.y);
   }
 
 }
