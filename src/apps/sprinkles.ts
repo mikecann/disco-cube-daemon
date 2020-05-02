@@ -12,17 +12,14 @@ async function bootstrap() {
 
   matrix.clear();
 
-  matrix.font(new Font('helvR12', `${process.cwd()}/fonts/spleen-16x32.bdf`));
+  matrix.afterSync((mat, dt, t) => {
+    matrix.fgColor(randomColor())
+      .setPixel(Math.floor(sideLength * Math.random()), Math.floor(sideLength * 6 * Math.random()))
 
-  const cube = createCube(matrix);
+    return matrix;
+  });
 
-  cube.animate(() => {
-    for (let i = 0; i < 6; i++) {
-      cube.sides[i].fill(randomColor());
-      cube.sides[i].drawRect(0, 0, sideLength - 1, sideLength - 1);
-      cube.sides[i].drawText(i + "", 25, 18);
-    }
-  })
+  matrix.sync();
 
   await hang();
 }

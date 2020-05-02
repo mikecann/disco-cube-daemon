@@ -1,0 +1,23 @@
+import { LedMatrixInstance } from "rpi-led-matrix";
+import { Point2D } from "./Point2D";
+import { rgbToHex } from "../../utils/rendering";
+import { Maze } from "./Maze";
+
+
+export class Nibble {
+
+
+  constructor(private maze: Maze, public position = Point2D.zero()) { }
+
+  update() {
+
+  }
+
+  render(matrix: LedMatrixInstance) {
+    const color = rgbToHex(0, 50, 0);
+    matrix.fgColor(color);
+
+    this.maze.renderPixel(this.position, matrix);
+  }
+
+}
