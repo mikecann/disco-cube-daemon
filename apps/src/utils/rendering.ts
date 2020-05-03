@@ -1,5 +1,5 @@
 import { LedMatrixInstance } from "rpi-led-matrix";
-import { narray } from "./misc";
+import { narray } from "../../../src/utils/misc";
 
 const sideLength = 64;
 const sidesCount = 6;

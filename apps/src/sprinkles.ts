@@ -1,7 +1,7 @@
 import { LedMatrix, LedMatrixUtils, Font, LedMatrixInstance, PixelMapperType } from "rpi-led-matrix";
 import { hang } from "../../src/utils/misc";
-import { createMatrix } from "../../src/utils/matrix";
-import { createCube, randomByte, randomColor } from "../../src/utils/rendering";
+import { createMatrix } from "./utils/matrix";
+import { createCube, randomByte, randomColor } from "./utils/rendering";
 
 const sideLength = 64;
 

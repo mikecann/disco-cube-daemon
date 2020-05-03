@@ -1,5 +1,5 @@
 import { hang } from "../../src/utils/misc";
-import { createMatrix } from "../../src/utils/matrix";
+import { createMatrix } from "./utils/matrix";
 
 class Pulser {
   constructor(

@@ -16,5 +16,5 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": ["./src/**/*.ts", "apps/src/debug.ts", "apps/src/paint.ts", "apps/src/sprinkles.ts", "apps/src/particles.ts", "apps/src/sparkle.ts"]
+  "include": ["./src/**/*.ts"]
 }

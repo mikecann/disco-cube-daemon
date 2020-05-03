@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import { Point2D } from './Point2D';
 import { LedMatrixInstance } from 'rpi-led-matrix';
-import { rgbToHex } from '../../../src/utils/rendering';
+import { rgbToHex } from '../utils/rendering';
 import { narray } from '../../../src/utils/misc';
 
 function mergeSetWith(row: Row, oldSet: number, newSet: number) {

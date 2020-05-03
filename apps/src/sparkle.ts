@@ -1,6 +1,6 @@
 import { hang } from "../../src/utils/misc";
-import { createMatrix } from "../../src/utils/matrix";
-import { randomColor } from "../../src/utils/rendering";
+import { createMatrix } from "./utils/matrix";
+import { randomColor } from "./utils/rendering";
 
 class Pulser {
   constructor(
