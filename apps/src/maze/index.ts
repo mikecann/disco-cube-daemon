@@ -1,6 +1,6 @@
-import { hang } from "../../utils/misc";
-import { createMatrix } from "../../utils/matrix";
 import { Game } from "./Game";
+import { hang } from "../../../src/utils/misc";
+import { createMatrix } from "../utils/matrix";
 
 async function bootstrap() {
   const matrix = createMatrix();

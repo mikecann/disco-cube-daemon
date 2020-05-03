@@ -1,7 +1,7 @@
 import { LedMatrixInstance } from "rpi-led-matrix";
 import { Point2D } from "./Point2D";
 import { ColorTrail } from "./ColorTrail";
-import { rgbToHex } from "../../utils/rendering";
+import { rgbToHex } from "../utils/rendering";
 import { Game } from "./Game";
 
 export class MrNibbles {

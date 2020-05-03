@@ -6,6 +6,9 @@
   "author": "Mike Cann <mike.cann@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "postinstall": "yarn install:apps && yarn install:mock",
+    "install:apps": "cd apps && yarn",
+    "install:mock": "cd mock && yarn",
     "compile": "tsc --noEmit",
     "dev": "nodemon -w src/**/*.* --exec ts-node src/index.ts",
     "build": "yarn compile",

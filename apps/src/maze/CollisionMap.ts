@@ -1,23 +1,25 @@
 import { Maze } from "./Maze";
 import { Point2D } from "./Point2D";
-
+import { LedMatrixInstance } from "rpi-led-matrix";
+import { narray } from "../../../src/utils/misc";
+import { rgbToHex } from "../utils/rendering";
 
 export class CollisionMap {
 
   public readonly width: number;
   public readonly height: number;
 
-  private collision: boolean[][];
+  private rows: boolean[][];
 
   constructor(private maze: Maze) {
 
-    this.height = 
-    this.width = (maze.cellsWide * 2) + 1;
+    this.height = (maze.height * 2) + 1;
+    this.width = (maze.width * 2) + 1;
 
-    this.collision = narray(this.collisionHeight).map(_ => narray(this.collisionWidth).map(__ => false));
+    this.rows = narray(this.height).map(_ => narray(this.width).map(__ => false));
 
-    for (let y = 0; y < rows.length; y++) {
-      const row = rows[y];
+    for (let y = 0; y < maze.rows.length; y++) {
+      const row = maze.rows[y];
       for (let x = 0; x < row.length; x++) {
         const cell = row[x];
 
@@ -25,27 +27,27 @@ export class CollisionMap {
         const cellYInPixels = 1 + (y * 2);
 
         if (cell.left) {
-          this.collision[cellYInPixels - 1][cellXInPixels - 1] = true;
-          this.collision[cellYInPixels - 0][cellXInPixels - 1] = true;
-          this.collision[cellYInPixels + 1][cellXInPixels - 1] = true;
+          this.rows[cellYInPixels - 1][cellXInPixels - 1] = true;
+          this.rows[cellYInPixels - 0][cellXInPixels - 1] = true;
+          this.rows[cellYInPixels + 1][cellXInPixels - 1] = true;
         }
 
         if (cell.right) {
-          this.collision[cellYInPixels - 1][cellXInPixels + 1] = true;
-          this.collision[cellYInPixels - 0][cellXInPixels + 1] = true;
-          this.collision[cellYInPixels + 1][cellXInPixels + 1] = true;
+          this.rows[cellYInPixels - 1][cellXInPixels + 1] = true;
+          this.rows[cellYInPixels - 0][cellXInPixels + 1] = true;
+          this.rows[cellYInPixels + 1][cellXInPixels + 1] = true;
         }
 
         if (cell.top) {
-          this.collision[cellYInPixels - 1][cellXInPixels - 1] = true;
-          this.collision[cellYInPixels - 1][cellXInPixels + 0] = true;
-          this.collision[cellYInPixels - 1][cellXInPixels + 1] = true;
+          this.rows[cellYInPixels - 1][cellXInPixels - 1] = true;
+          this.rows[cellYInPixels - 1][cellXInPixels + 0] = true;
+          this.rows[cellYInPixels - 1][cellXInPixels + 1] = true;
         }
 
         if (cell.bottom) {
-          this.collision[cellYInPixels + 1][cellXInPixels - 1] = true;
-          this.collision[cellYInPixels + 1][cellXInPixels + 0] = true;
-          this.collision[cellYInPixels + 1][cellXInPixels + 1] = true;
+          this.rows[cellYInPixels + 1][cellXInPixels - 1] = true;
+          this.rows[cellYInPixels + 1][cellXInPixels + 0] = true;
+          this.rows[cellYInPixels + 1][cellXInPixels + 1] = true;
         }
       }
     }
@@ -59,8 +61,10 @@ export class CollisionMap {
   }
 
   renderWalls(matrix: LedMatrixInstance) {
-    for (let y = 0; y < this.collision.length; y++) {
-      const row = this.collision[y];
+    matrix.fgColor(rgbToHex(100, 100, 100));
+
+    for (let y = 0; y < this.rows.length; y++) {
+      const row = this.rows[y];
       for (let x = 0; x < row.length; x++) {
         const cell = row[x];
         if (cell)
@@ -70,11 +74,10 @@ export class CollisionMap {
   }
 
   getIsWall(pos: Point2D) {
-    const row = this.collision[pos.y];
-    if (!row) throw new Error(`pos out of cell bounds '${pos}'`);
+    const row = this.rows[pos.y];
+    if (!row) throw new Error(`pos out of Y bounds '${pos}'`);
     const cell = row[pos.x];
-    if (!cell) throw new Error(`pos out of cell bounds '${pos}'`);
-    return cell;
+    return cell == true;
   }
 
   canPass(fromPos: Point2D, velocity: Point2D) {
@@ -86,8 +89,8 @@ export class CollisionMap {
   }
 
   isOutOfBounds(pos: Point2D) {
-    if (pos.x < 0 || pos.x >= this.cellsWide) return true;
-    if (pos.y < 0 || pos.y >= this.cellsHigh) return true;
+    if (pos.x < 0 || pos.x >= this.width) return true;
+    if (pos.y < 0 || pos.y >= this.height) return true;
     return false;
   }
 

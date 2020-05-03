@@ -1,7 +1,7 @@
 import { LedMatrixInstance } from "rpi-led-matrix";
 import { Maze } from "./Maze";
 import { Point2D } from "./Point2D";
-import { rgbToHex } from "../../utils/rendering";
+import { rgbToHex } from "../utils/rendering";
 
 
 export class SuperNibble {

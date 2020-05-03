@@ -1,6 +1,6 @@
 import { LedMatrixInstance } from "rpi-led-matrix";
 import { Point2D } from "./Point2D";
-import { rgbToHex } from "../../utils/rendering";
+import { rgbToHex } from "../utils/rendering";
 import { Maze } from "./Maze";
 
 

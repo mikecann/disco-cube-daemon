@@ -9,7 +9,7 @@ export const defaultMatrixOptions: MatrixOptions = {
   parallel: 3,
   pixelMapperConfig: LedMatrixUtils.encodeMappers({ type: PixelMapperType.U }),
   showRefreshRate: true,
-  pwmDitherBits: 1,
+  pwmDitherBits: 2,
   brightness: 100
 } as const
 

@@ -1091,6 +1091,11 @@ node-abi@^2.7.0:
   dependencies:
     semver "^5.4.1"
 
+node-addon-api@^1.6.3:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.1.tgz#cf813cd69bb8d9100f6bdca6755fc268f54ac492"
+  integrity sha512-2+DuKodWvwRTrCfKOeR24KIc5unKjOh8mz17NCzVnHWfjAdDqbfbjqh7gUT+BkXBRQM52+xCHciKWonJ3CbJMQ==
+
 nodemon@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.3.tgz#e9c64df8740ceaef1cb00e1f3da57c0a93ef3714"
@@ -1407,6 +1412,14 @@ rfdc@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.1.4.tgz#ba72cc1367a0ccd9cf81a870b3b58bd3ad07f8c2"
   integrity sha512-5C9HXdzK8EAqN7JDif30jqsBzavB7wLpaubisuQIGHWf2gUXSpzy6ArX/+Da8RjFpagWsCn+pIgxTMAmKw9Zug==
+
+rpi-led-matrix@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/rpi-led-matrix/-/rpi-led-matrix-1.9.0.tgz#9c507a5013c5f7fcdf2e51d6d39fe28c4edbe43e"
+  integrity sha512-ehTFLSK/5/kUjLL/OY1pWcfNjbfXPcvbvJgbfJxtbLg0DU0N+8xQmzWVOsnTPyLUNQsVxZZdtIuPhF7h6Rz2+Q==
+  dependencies:
+    bindings "^1.5.0"
+    node-addon-api "^1.6.3"
 
 safe-buffer@^5.0.1, safe-buffer@~5.2.0:
   version "5.2.0"
