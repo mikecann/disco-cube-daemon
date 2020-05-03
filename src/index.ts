@@ -11,7 +11,7 @@ import { initAppState, startAppService } from "./modules/apps";
 import { setupShutdown } from "./utils/shutdown";
 import * as log4js from "log4js";
 import { configLogger } from "./utils/logging";
-import { isRoot } from "./utils/misc";
+import { isRoot, isWindows } from "./utils/misc";
 
 configLogger();
 
@@ -21,7 +21,7 @@ async function bootstrap() {
   logger.info(` `);
   logger.info(`starting up...`, { cwd: process.cwd() });
 
-  if (!isRoot()) {
+  if (!isWindows() && !isRoot()) {
     logger.error(`must be run as root user (sudo)`);
     process.exit(1);
   }
@@ -56,7 +56,7 @@ async function bootstrap() {
     (essentialSystemInfo) => updateFirebaseState("cubes", { essentialSystemInfo })
   );
 
-  setInterval(() => { }, 1000);
+  setInterval(() => {}, 1000);
 }
 
 bootstrap().catch((e: any) => {

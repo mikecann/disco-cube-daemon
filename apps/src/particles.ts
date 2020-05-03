@@ -1,5 +1,5 @@
-import { hang } from "../utils/misc";
-import { createMatrix } from "../utils/matrix";
+import { hang } from "../../src/utils/misc";
+import { createMatrix } from "../../src/utils/matrix";
 import SerialPort from "serialport";
 import Readline from "@serialport/parser-readline"
 

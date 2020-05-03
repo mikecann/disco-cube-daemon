@@ -1,5 +1,9 @@
 export const isRoot = () => process.getuid && process.getuid() === 0;
 
+export function isWindows() {
+  return process && (process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE + ""));
+};
+
 export const wait = (t: number) => new Promise(ok => setTimeout(ok, t));
 
 export const hang = () => wait(999999999);

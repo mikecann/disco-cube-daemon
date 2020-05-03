@@ -20,8 +20,10 @@ const config = {
 
 export const initFirebase = () => firebase.initializeApp(config);
 
-export const signInToFirebase = (email: string, password: string) =>
-  firebase.auth().signInWithEmailAndPassword(email, password);
+export const signInToFirebase = (email: string, password: string) => {
+  logger.info(`signing into firebase`, { email });
+  return firebase.auth().signInWithEmailAndPassword(email, password);
+};
 
 export const signOutOfFirebase = () => firebase.auth().signOut();
 
