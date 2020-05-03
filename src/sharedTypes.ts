@@ -1,3 +1,5 @@
+import * as firebase from "firebase/app";
+
 /**
  * Collections
  */
@@ -30,12 +32,12 @@ export const EssentialSystemInfo = (o: {
 }) => {
   return { ...o } as const;
 };
-export interface EssentialSystemInfo extends ReturnType<typeof EssentialSystemInfo> { }
+export interface EssentialSystemInfo extends ReturnType<typeof EssentialSystemInfo> {}
 
 export const CubeSystemInfo = (o: {}) => {
   return { ...o } as const;
 };
-export interface CubeSystemInfo extends ReturnType<typeof CubeSystemInfo> { }
+export interface CubeSystemInfo extends ReturnType<typeof CubeSystemInfo> {}
 
 /**
  * Terminal
@@ -49,7 +51,7 @@ export const TerminalState = (o: {
 }) => {
   return { ...o } as const;
 };
-export interface TerminalState extends ReturnType<typeof TerminalState> { }
+export interface TerminalState extends ReturnType<typeof TerminalState> {}
 
 export const TerminalCommandExecution = (o: {
   stdout: string;
@@ -61,7 +63,7 @@ export const TerminalCommandExecution = (o: {
 }) => {
   return { ...o } as const;
 };
-export interface TerminalCommandExecution extends ReturnType<typeof TerminalCommandExecution> { }
+export interface TerminalCommandExecution extends ReturnType<typeof TerminalCommandExecution> {}
 
 /**
  * Apps
@@ -72,6 +74,7 @@ export type Apps = {
   paint: PaintAppState;
   debug: AppState;
   sparkle: AppState;
+  sprinkles: AppState;
 };
 
 export type AppNames = keyof Apps;
@@ -80,7 +83,7 @@ export type AppStates = Apps[AppNames];
 export const AppsState = (o: { command: AppsCommands | null; runningApp: AppExecution | null }) => {
   return { ...o } as const;
 };
-export interface AppsState extends ReturnType<typeof AppsState> { }
+export interface AppsState extends ReturnType<typeof AppsState> {}
 
 export const AppExecution = (o: {
   name: AppNames;
@@ -92,27 +95,57 @@ export const AppExecution = (o: {
 }) => {
   return { ...o } as const;
 };
-export interface AppExecution extends ReturnType<typeof AppExecution> { }
+export interface AppExecution extends ReturnType<typeof AppExecution> {}
 
 /**
  * App States
  */
 
 export const AppState = (o: {}) => ({ ...o } as const);
-export interface AppState extends ReturnType<typeof AppState> { }
+export interface AppState extends ReturnType<typeof AppState> {}
 
-export const PaintAppState = (o: {}) => ({ ...o } as const);
-export interface PaintAppState extends ReturnType<typeof PaintAppState> { }
+export const PaintAppState = (o: { faces: Uint8Array[] }) => ({ ...o } as const);
+export interface PaintAppState extends ReturnType<typeof PaintAppState> {}
 
 /**
  * App Commands
  */
 
-export type AppsCommands = StartAppCommand | StopAppCommand;
+export type AppsCommands = StartAppCommand | StopAppCommand | UpdateAppState;
 
 export const StartAppCommand = (o: { name: AppNames; args: string[] }) =>
   ({ kind: "start-app", ...o } as const);
-export interface StartAppCommand extends ReturnType<typeof StartAppCommand> { }
+export interface StartAppCommand extends ReturnType<typeof StartAppCommand> {}
 
 export const StopAppCommand = (o: {}) => ({ kind: "stop-app", ...o } as const);
-export interface StopAppCommand extends ReturnType<typeof StopAppCommand> { }
+export interface StopAppCommand extends ReturnType<typeof StopAppCommand> {}
+
+export const UpdateAppState = (o: { app: AppNames; state: any }) =>
+  ({ kind: "update-app-state", ...o } as const);
+export interface UpdateAppState extends ReturnType<typeof UpdateAppState> {}
+
+/**
+ * Utils
+ */
+
+export const dataConverter: firebase.firestore.FirestoreDataConverter<any> = {
+  toFirestore(value: any): firebase.firestore.DocumentData {
+    if (value instanceof Uint8Array) {
+      return firebase.firestore.Blob.fromUint8Array(value);
+    } else if (typeof value == "object") {
+      return Object.entries(value)
+        .map((k) => [k[0], dataConverter.toFirestore(k[1])] as const)
+        .reduce((accum, curr) => ({ ...accum, [curr[0]]: curr[1] }), {});
+    } else if (Array.isArray(value)) {
+      return value.map((o) => dataConverter.toFirestore(o));
+    }
+    return value;
+  },
+  fromFirestore(
+    snapshot: firebase.firestore.QueryDocumentSnapshot,
+    options: firebase.firestore.SnapshotOptions
+  ): any {
+    const data = snapshot.data(options)!;
+    return data;
+  },
+};
