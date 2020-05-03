@@ -130,6 +130,8 @@ export interface UpdateAppState extends ReturnType<typeof UpdateAppState> {}
 
 export const dataConverter: firebase.firestore.FirestoreDataConverter<any> = {
   toFirestore(value: any): firebase.firestore.DocumentData {
+    if (value === null || value === undefined) return value;
+
     if (value instanceof Uint8Array) {
       return firebase.firestore.Blob.fromUint8Array(value);
     } else if (typeof value == "object") {
@@ -146,6 +148,21 @@ export const dataConverter: firebase.firestore.FirestoreDataConverter<any> = {
     options: firebase.firestore.SnapshotOptions
   ): any {
     const data = snapshot.data(options)!;
-    return data;
+    return fromFirestoreValue(data);
   },
+};
+
+const fromFirestoreValue = (value: any): any => {
+  if (value === null || value === undefined) return value;
+
+  if (value instanceof firebase.firestore.Blob) {
+    return value.toUint8Array();
+  } else if (typeof value == "object") {
+    return Object.entries(value)
+      .map((k) => [k[0], fromFirestoreValue(k[1])] as const)
+      .reduce((accum, curr) => ({ ...accum, [curr[0]]: curr[1] }), {});
+  } else if (Array.isArray(value)) {
+    return value.map((o) => fromFirestoreValue(o));
+  }
+  return value;
 };

@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/database";
-import { FirebaseCollections } from "../sharedTypes";
+import { FirebaseCollections, dataConverter } from "../sharedTypes";
 import * as log4js from "log4js";
 
 const logger = log4js.getLogger(`firebase`);
@@ -39,6 +39,7 @@ export const listenForFirebaseSnapshots = <T extends keyof FirebaseCollections>(
   firebase
     .firestore()
     .collection(collection)
+    .withConverter(dataConverter)
     .doc(currentUser.uid)
     .onSnapshot((x) => handler(x.data() as any));
 };
@@ -49,7 +50,12 @@ export const setFirebaseState = <T extends keyof FirebaseCollections>(
 ) => {
   const currentUser = firebase.auth().currentUser;
   if (!currentUser) throw new Error(`user must be authenticated`);
-  return firebase.firestore().collection(collection).doc(currentUser.uid).set(state);
+  return firebase
+    .firestore()
+    .collection(collection)
+    .withConverter(dataConverter)
+    .doc(currentUser.uid)
+    .set(state);
 };
 
 export const updateFirebaseState = <T extends keyof FirebaseCollections>(
@@ -58,7 +64,12 @@ export const updateFirebaseState = <T extends keyof FirebaseCollections>(
 ) => {
   const currentUser = firebase.auth().currentUser;
   if (!currentUser) throw new Error(`user must be authenticated`);
-  return firebase.firestore().collection(collection).doc(currentUser.uid).update(partial);
+  return firebase
+    .firestore()
+    .collection(collection)
+    .withConverter(dataConverter)
+    .doc(currentUser.uid)
+    .update(partial);
 };
 
 // Borrowed from: https://firebase.google.com/docs/firestore/solutions/presence

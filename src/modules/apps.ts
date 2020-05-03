@@ -1,6 +1,6 @@
 import { updateFirebaseState, listenForFirebaseSnapshots, setFirebaseState } from "./firebase";
 import { AppExecution, AppNames } from "../sharedTypes";
-import { ChildProcessWithoutNullStreams, spawn, fork } from "child_process";
+import { ChildProcessWithoutNullStreams, spawn, fork, ChildProcess } from "child_process";
 import * as log4js from "log4js";
 import kill from "tree-kill";
 import { config } from "../config/config";
@@ -59,27 +59,25 @@ export const startAppService = () => {
     if (command.kind == "update-app-state") {
       if (!app) return;
 
-      console.log("UPDATING APP STATE", command.state);
+      //console.log("UPDATING APP STATE", command.state);
 
       app.send(command);
 
       updateFirebaseState("apps", {
         command: null,
-        runningApp: null,
       });
     }
   });
 };
 
 const startNodeApp = (name: string) => (args: string[]) =>
-  startApp(name, getNodePath(), [`${process.cwd()}/apps/dist/${name}.js`, ...args]);
+  spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/${name}.js`, ...args]);
 
-const startMockApp = () =>
-  startApp("mock", getNodePath(), [`${process.cwd()}/mock/dist/mock/src/index.js`]);
+const startMockApp = () => forkApp("mock", `${process.cwd()}/mock/dist/mock/src/index.js`, []);
 
 const apps: Record<AppNames, (args: string[]) => RunningApp> = {
   rpiDemos: (args) =>
-    startApp(`rpiDemos`, `/home/pi/rpi-rgb-led-matrix/examples-api-use/demo`, [
+    spawnApp(`rpiDemos`, `/home/pi/rpi-rgb-led-matrix/examples-api-use/demo`, [
       `--led-rows=64`,
       `--led-cols=64`,
       `--led-chain=2`,
@@ -95,7 +93,7 @@ const apps: Record<AppNames, (args: string[]) => RunningApp> = {
   sprinkles: startNodeApp(`sprinkles`),
 };
 
-const startApp = (name: string, command: string, args: string[]) => {
+const spawnApp = (name: string, command: string, args: string[]): RunningApp => {
   const logger = log4js.getLogger(name);
   logger.debug(`starting..`);
 
@@ -120,7 +118,7 @@ const startApp = (name: string, command: string, args: string[]) => {
 
   return {
     send: (data: any) => {
-
+      logger.warn(`cannot send data to a spawned app, must be forked.`);
     },
     stop: () => {
       logger.debug(`stopping..`);
@@ -129,4 +127,47 @@ const startApp = (name: string, command: string, args: string[]) => {
   };
 };
 
-export type RunningApp = ReturnType<typeof startApp>;
+const forkApp = (name: string, jsFilePath: string, args: string[]): RunningApp => {
+  const logger = log4js.getLogger(name);
+  logger.debug(`starting..`);
+
+  let proc: ChildProcess | undefined = undefined;
+  try {
+    proc = fork(jsFilePath, args, {
+      stdio: "pipe",
+    });
+
+    if (!proc) throw new Error(`fork failed, no proc`);
+    if (!proc.stdout) throw new Error(`fork failed, no proc.stdout`);
+    if (!proc.stderr) throw new Error(`fork failed, no proc.stderr`);
+
+    proc.stdout.on("data", (data) => {
+      logger.debug(`stdout: ${data}`);
+    });
+
+    proc.stderr.on("data", (data) => {
+      logger.error(`stderr: ${data}`);
+    });
+
+    proc.on("close", (code) => {
+      logger.debug(`child process exited with code ${code}`);
+    });
+  } catch (e) {
+    logger.error(`spawn error`, e);
+  }
+
+  return {
+    send: (data: any) => {
+      proc?.send(data);
+    },
+    stop: () => {
+      logger.debug(`stopping..`);
+      if (proc) kill(proc.pid);
+    },
+  };
+};
+
+export type RunningApp = {
+  stop: () => any;
+  send: (data: any) => any;
+};
