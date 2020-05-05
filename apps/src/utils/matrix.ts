@@ -18,7 +18,7 @@ export const defaultMatrixRuntimeOptions: RuntimeOptions = {
   gpioSlowdown: 2,
 } as const
 
-export const createMatrix = () => new LedMatrix(
-  defaultMatrixOptions,
+export const createMatrix = (overrides?: Partial<MatrixOptions>) => new LedMatrix(
+  { ...defaultMatrixOptions, ...overrides },
   defaultMatrixRuntimeOptions
 );

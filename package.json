@@ -10,7 +10,7 @@
     "install:apps": "cd apps && yarn",
     "install:mock": "cd mock && yarn",
     "compile": "tsc --noEmit",
-    "dev": "nodemon -w src/**/*.* --exec ts-node src/index.ts",
+    "dev": "nodemon -w 'src/**/*.*' --exec ts-node 'src/index.ts'",
     "build": "yarn compile",
     "build:apps": "cd apps && yarn compile",
     "start": "node ./dist/index.js",

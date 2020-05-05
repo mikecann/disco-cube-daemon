@@ -12,7 +12,7 @@ async function bootstrap() {
 
   matrix.clear();
 
-  matrix.font(new Font('helvR12', `${process.cwd()}/fonts/spleen-16x32.bdf`));
+  matrix.font(new Font('helvR12', `${process.cwd()}/apps/fonts/spleen-16x32.bdf`));
 
   const cube = createCube(matrix);
 

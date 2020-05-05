@@ -1,41 +1,33 @@
 import { hang } from "../../src/utils/misc";
 import { createMatrix } from "./utils/matrix";
+import { onUpdateCommand } from "../../src/modules/utils";
+import { createCube } from "./utils/rendering";
+import { PaintAppState } from "../../src/sharedTypes"
 
-class Pulser {
-  constructor(
-    readonly x: number,
-    readonly y: number,
-    readonly f: number
-  ) { }
 
-  nextColor(t: number): number {
-    const brightness = 0xFF & Math.max(0, (255 * (Math.sin(this.f * t / 1000))));
-    return (brightness << 16) | (brightness << 8) | brightness;
-  }
-}
 
 async function bootstrap() {
-  const matrix = createMatrix();
+  const matrix = createMatrix({
+    showRefreshRate: false
+  });
 
   console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
 
-  matrix.clear();
-  
-  const pulsers: Pulser[] = [];
+  const cube = createCube(matrix);
 
-  for (let x = 0; x < matrix.width(); x++) {
-    for (let y = 0; y < matrix.height(); y++) {
-      pulsers.push(new Pulser(x, y, 5 * Math.random()));
-    }
-  }
 
-  matrix.afterSync((mat, dt, t) =>
-    pulsers.map(pulser => {
-      matrix.fgColor(pulser.nextColor(t)).setPixel(pulser.x, pulser.y);
-    })
-  );
+  onUpdateCommand<PaintAppState>((state) => {
+    const side = cube.sides[state.face];
+    if (!side) throw new Error(`invlid cube side: ` + state.face);
+    const pixels: number[] = Object.values(state.data)
+    side.setPixels(pixels)
 
-  matrix.sync();
+    matrix.sync();
+
+  });
+
+
+
 
   await hang();
 }

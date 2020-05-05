@@ -33,11 +33,27 @@ export const createCubeSide = (matrix: LedMatrixInstance, sideIndex: number) => 
 
   const setPixel = (x: number, y: number, color: number) => matrix.fgColor(color).setPixel(x, pixelOffset + y);
 
+  const setPixels = (rgb: number[]) => {
+    if (rgb.length != bufferSizePerSize)
+      throw new Error(`unexpected number of rgb values, there were '${rgb.length}' provided but '${bufferSizePerSize}' expected`)
+
+    for (let y = 0; y < sideLength; y++) {
+      for (let x = 0; x < sideLength; x++) {
+        const index = ((sideLength * y) + x) * 3;
+        const r = rgb[index + 0];
+        const g = rgb[index + 1];
+        const b = rgb[index + 2];
+        setPixel(x, y, rgbToHex(r, g, b));
+      }
+    }
+  }
+
   return {
     fill,
     drawRect,
     drawText,
-    setPixel
+    setPixel,
+    setPixels
   }
 
 }

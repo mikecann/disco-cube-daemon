@@ -59,8 +59,6 @@ export const startAppService = () => {
     if (command.kind == "update-app-state") {
       if (!app) return;
 
-      //console.log("UPDATING APP STATE", command.state);
-
       app.send(command);
 
       updateFirebaseState("apps", {
@@ -71,7 +69,7 @@ export const startAppService = () => {
 };
 
 const startNodeApp = (name: string) => (args: string[]) =>
-  spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/${name}.js`, ...args]);
+  spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/apps/src/${name}.js`, ...args]);
 
 const startMockApp = () => forkApp("mock", `${process.cwd()}/mock/dist/mock/src/index.js`, []);
 
@@ -89,7 +87,7 @@ const apps: Record<AppNames, (args: string[]) => RunningApp> = {
 
   sparkle: startNodeApp(`sparkle`),
   debug: startNodeApp(`debug`),
-  paint: startNodeApp(`paint`),
+  paint: () => forkApp(`paint`, `${process.cwd()}/apps/dist/apps/src/paint.js`, []),
   sprinkles: startNodeApp(`sprinkles`),
 };
 
