@@ -98,4 +98,9 @@ export class CollisionMap {
     return Point2D.directions.filter(d => this.canPass(fromPos, d));
   }
 
+  enumerateCells = () => narray(this.height).map(y => narray(this.width).map(x => {
+    const pos = new Point2D(x, y);
+    return ({ pos, isWall: this.getIsWall(pos) })
+  })).flat();
+
 }

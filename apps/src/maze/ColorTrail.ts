@@ -17,14 +17,12 @@ export class ColorTrail {
   }
 
   render(matrix: LedMatrixInstance) {
-
     const step = 1 / this.maxLength;
 
     for (let i = 0; i < this.segments.length; i++) {
       const color = multiplyColor(this.color, step * i);
       matrix.fgColor(color).setPixel(this.segments[i].x, this.segments[i].y);
     }
-
   }
 
   contains(segment: Point2D) {

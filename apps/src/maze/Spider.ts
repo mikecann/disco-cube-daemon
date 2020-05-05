@@ -4,6 +4,7 @@ import { Point2D } from "./Point2D";
 import { Game } from "./Game";
 import { ColorTrail } from "./ColorTrail";
 import { randomOne } from "../../../src/utils/misc";
+import { sortPossibleDirections } from "./utils";
 
 export type SpiderState = "searching" | "hunting" | "dead" | "respawning"
 
@@ -29,19 +30,27 @@ export class Spider {
 
       const possibles = this.game.collision.getPossibleDirections(this.position);
 
-      const sortedPossibles = possibles.map(dir => {
-        let score = 1;
+      const sortedPossibles = sortPossibleDirections(possibles, (dir) => {
+        let score = 10;
 
         const newPos = this.position.sum(dir);
 
+        // Dont go somewhere we have already been
         const hasTrial = this.trail.contains(newPos);
-        if (hasTrial) score -= 1;
+        if (hasTrial)
+          score -= 2;
 
+        // Favor trying out different paths
+        if (!dir.equals(this.velocity) && possibles.length > 2)
+          score += 1;
+
+        // Dont backtrack
         const isOppositeDir = dir.isOppositeDirectionTo(this.velocity);
-        if (isOppositeDir) score -= 1;
+        if (isOppositeDir) score -= 3;
 
-        return { dir, score };
-      }).sort((a, b) => b.score - a.score).map(o => o.dir)
+        return score;
+
+      })
 
       this.velocity = sortedPossibles[0];
 

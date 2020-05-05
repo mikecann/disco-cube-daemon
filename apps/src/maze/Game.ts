@@ -9,8 +9,14 @@ import { SuperNibble } from "./SuperNibble";
 import { narray } from "../../../src/utils/misc";
 import { createCube } from "../utils/rendering";
 import { CollisionMap } from "./CollisionMap";
+import { shuffle } from "../../../src/utils/misc"
 
 const sideLength = 64;
+const sides = 6;
+const superNibblesPerSize = 5;
+const superNibbles = sides * superNibblesPerSize;
+const spidersPerSize = 4;
+const spiders = sides * spidersPerSize;
 
 export class Game {
 
@@ -34,26 +40,33 @@ export class Game {
     this.maze = new Maze(cellsW, cellsH);
     this.collision = new CollisionMap(this.maze);
 
-    this.spiders = narray(10).map(_ => new Spider(this));
+    this.spiders = narray(spiders).map(_ => new Spider(this));
 
     //this.spawnPoint = this.maze.getRandomPoint();
-    //this.mrNibbles = new MrNibbles(this);
-    //this.superNibbles = narray(10).map(_ => new SuperNibble(this.maze, this.maze.getRandomPoint()))
-    // this.nibbles = this.collision.map((row, y) => row.filter(c => c == true).map((cell, x) =>
-    //   new Nibble(this.maze, new Point2D(x, y)))
-    // ).flat();
+    this.mrNibbles = new MrNibbles(this);
+    this.nibbles = this.collision.enumerateCells().filter(o => !o.isWall).map(o => new Nibble(o.pos));
+    this.superNibbles = shuffle(this.nibbles).slice(0, superNibbles).map(o => new SuperNibble(o.position));
   }
 
   private update() {
     this.spiders.forEach(s => s.update());
+    this.mrNibbles.update();
   }
 
   private render() {
     this.collision.renderWalls(this.matrix);
-    //this.nibbles.forEach(s => s.render(this.matrix));
-    //this.superNibbles.forEach(s => s.render(this.matrix));
+    this.nibbles.forEach(s => s.render(this.matrix));
+    this.superNibbles.forEach(s => s.render(this.matrix));
     this.spiders.forEach(s => s.render(this.matrix));
-    //this.mrNibbles.render(this.matrix);
+    this.mrNibbles.render(this.matrix);
+  }
+
+  public destoryNibble(nibble: Nibble) {
+    this.nibbles = this.nibbles.filter(n => n != nibble);
+  }
+
+  public destorySuperNibble(nibble: SuperNibble) {
+    this.superNibbles = this.superNibbles.filter(n => n != nibble);
   }
 
   start() {

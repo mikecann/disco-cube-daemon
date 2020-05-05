@@ -7,7 +7,7 @@ import { rgbToHex } from "../utils/rendering";
 export class SuperNibble {
 
 
-  constructor(private maze: Maze, public position = Point2D.zero) { }
+  constructor(public position = Point2D.zero) { }
 
   update() {
 

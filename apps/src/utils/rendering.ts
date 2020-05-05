@@ -70,14 +70,13 @@ export const createCube = (matrix: LedMatrixInstance) => {
     matrix.afterSync((mat, dt, t) => {
 
       timeSinceLastFrame += dt;
-      if (timeSinceLastFrame > 100) {
+      if (timeSinceLastFrame > msPerFrame) {
         timeSinceLastFrame = 0;
         renderfn();
       }
 
-      return matrix;
+      setTimeout(() => matrix.sync(), 0);
     });
-
     matrix.sync();
   }
 

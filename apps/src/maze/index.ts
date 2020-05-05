@@ -4,7 +4,9 @@ import { createMatrix } from "../utils/matrix";
 
 async function bootstrap() {
   const matrix = createMatrix({
-    showRefreshRate: false
+    showRefreshRate: false,
+  }, {
+    gpioSlowdown: 4
   });
 
   console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });

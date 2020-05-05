@@ -7,7 +7,7 @@ import { Maze } from "./Maze";
 export class Nibble {
 
 
-  constructor(private maze: Maze, public position = Point2D.zero) { }
+  constructor(public position = Point2D.zero) { }
 
   update() {
 
