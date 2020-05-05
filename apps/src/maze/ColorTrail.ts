@@ -27,4 +27,8 @@ export class ColorTrail {
 
   }
 
+  contains(segment: Point2D) {
+    return this.segments.find(s => s.equals(segment))
+  }
+
 }

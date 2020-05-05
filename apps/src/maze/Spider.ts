@@ -27,36 +27,29 @@ export class Spider {
 
     if (this.state == "hunting") {
 
-      const canPass = this.game.collision.canPass(this.position, this.velocity);
       const possibles = this.game.collision.getPossibleDirections(this.position);
 
-      // Keep going in that direction if we can
-      if (canPass) {
+      const sortedPossibles = possibles.map(dir => {
+        let score = 1;
 
-        // Rarely have a chance to change direction
-        if (Math.random() < 0.1) {
-          const nonOpposite = possibles.filter(p => !p.isOppositeDirectionTo(this.velocity));
-          if (nonOpposite.length > 0) {
-            this.velocity = randomOne(nonOpposite);
-            console.log(`changed my mind, heading in ${this.velocity}`)
-          }
-        }
+        const newPos = this.position.sum(dir);
 
-      }
+        const hasTrial = this.trail.contains(newPos);
+        if (hasTrial) score -= 1;
 
-      // If we cant keep going then lets go a different way
-      else {
-        if (possibles.length == 0) throw new Error(`no possible directions`);
+        const isOppositeDir = dir.isOppositeDirectionTo(this.velocity);
+        if (isOppositeDir) score -= 1;
 
-        this.velocity = randomOne(possibles);
-        console.log(`cant go that way, changed to ${this.velocity}`);
-      }
+        return { dir, score };
+      }).sort((a, b) => b.score - a.score).map(o => o.dir)
+
+      this.velocity = sortedPossibles[0];
+
+      //console.log(`update position: ${this.position}, velocity: ${this.velocity}`);
+
+      this.position = this.position.sum(this.velocity);
+      this.trail.addSegment(this.position);
     }
-
-    console.log(`update position: ${this.position}, velocity: ${this.velocity}`);
-
-    this.position = this.position.sum(this.velocity);
-    this.trail.addSegment(this.position);
   }
 
   render(matrix: LedMatrixInstance) {

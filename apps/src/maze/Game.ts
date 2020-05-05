@@ -34,7 +34,7 @@ export class Game {
     this.maze = new Maze(cellsW, cellsH);
     this.collision = new CollisionMap(this.maze);
 
-    this.spiders = narray(1).map(_ => new Spider(this));
+    this.spiders = narray(10).map(_ => new Spider(this));
 
     //this.spawnPoint = this.maze.getRandomPoint();
     //this.mrNibbles = new MrNibbles(this);
@@ -45,7 +45,7 @@ export class Game {
   }
 
   private update() {
-    //this.spiders.forEach(s => s.update());
+    this.spiders.forEach(s => s.update());
   }
 
   private render() {

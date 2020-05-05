@@ -11,6 +11,10 @@ export class Point2D {
     return `${this.x}, ${this.y}`
   }
 
+  public equals(p2: Point2D) {
+    return this.x == p2.x && this.y == p2.y;
+  }
+
   public isOppositeDirectionTo(p2: Point2D) {
     if (this.x == -1 && p2.x == 1) return true;
     if (this.y == -1 && p2.y == 1) return true;
@@ -20,7 +24,7 @@ export class Point2D {
   }
 
   public static readonly zero = new Point2D();
-  public static readonly north = new Point2D(0, -1);
+  public static readonly north = new Point2D(0, 1);
   public static readonly south = new Point2D(0, -1);
   public static readonly east = new Point2D(-1, 0);
   public static readonly west = new Point2D(1, 0);
