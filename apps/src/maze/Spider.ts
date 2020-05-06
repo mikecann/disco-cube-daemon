@@ -2,24 +2,29 @@ import { LedMatrixInstance } from "rpi-led-matrix";
 import { rgbToHex } from "../utils/rendering";
 import { Point2D } from "./Point2D";
 import { Game } from "./Game";
-import { ColorTrail } from "./ColorTrail";
-import { randomOne } from "../../../src/utils/misc";
+import { randomOne, shuffle } from "../../../src/utils/misc";
 import { sortPossibleDirections } from "./utils";
+import { TrailRenderer } from "./TrailRenderer";
+import { Trail } from "./Trail";
 
 export type SpiderState = "searching" | "hunting" | "dead" | "respawning"
 
 export class Spider {
 
   public position: Point2D;
-  private trail: ColorTrail;
+  private colorTrail: Trail;
+  private trailRenderer: TrailRenderer;
   private state: SpiderState;
+  private historyTrail: Trail;
   private velocity: Point2D;
 
   constructor(private game: Game) { this.reset() }
 
   reset() {
     this.state = "hunting";
-    this.trail = new ColorTrail(this.game.maze, rgbToHex(100, 0, 100));
+    this.colorTrail = new Trail(10);
+    this.historyTrail = new Trail(200);
+    this.trailRenderer = new TrailRenderer(this.colorTrail, rgbToHex(100, 0, 100));
     this.position = this.game.collision.mazeToPixelPosition(this.game.maze.getRandomPoint());
     this.velocity = Point2D.randomDirection();
   }
@@ -28,41 +33,37 @@ export class Spider {
 
     if (this.state == "hunting") {
 
-      const possibles = this.game.collision.getPossibleDirections(this.position);
+      const getNewVelocity = () => {
+        const left = this.velocity.left();
 
-      const sortedPossibles = sortPossibleDirections(possibles, (dir) => {
-        let score = 10;
+        const isWallToLeft = this.game.collision.getIsWall(this.position.sum(left));
+        if (!isWallToLeft) return left;
 
-        const newPos = this.position.sum(dir);
+        const isWallForward = this.game.collision.getIsWall(this.position.sum(this.velocity));
+        if (!isWallForward)
+          return this.velocity;
 
-        // Dont go somewhere we have already been
-        const hasTrial = this.trail.contains(newPos);
-        if (hasTrial)
-          score -= 2;
+        const possibles = this.game.collision.getPossibleDirections(this.position);
+        if (possibles.length == 0) throw new Error(`there are no possibles, this is impossible`);
 
-        // Favor trying out different paths
-        if (!dir.equals(this.velocity) && possibles.length > 2)
-          score += 1;
+        const sorted = sortPossibleDirections(possibles, dir =>
+          this.historyTrail.getAge(this.position.sum(dir))
+        )
 
-        // Dont backtrack
-        const isOppositeDir = dir.isOppositeDirectionTo(this.velocity);
-        if (isOppositeDir) score -= 3;
+        return sorted[0];
+      }
 
-        return score;
 
-      })
-
-      this.velocity = sortedPossibles[0];
-
-      //console.log(`update position: ${this.position}, velocity: ${this.velocity}`);
+      this.velocity = getNewVelocity();
 
       this.position = this.position.sum(this.velocity);
-      this.trail.addSegment(this.position);
+      this.colorTrail.addSegment(this.position);
+      this.historyTrail.addSegment(this.position);
     }
   }
 
   render(matrix: LedMatrixInstance) {
-    this.trail.render(matrix);
+    this.trailRenderer.render(matrix);
 
     matrix.fgColor(rgbToHex(255, 0, 255)).setPixel(this.position.x, this.position.y);
   }
