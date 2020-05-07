@@ -9,7 +9,7 @@ export class CollisionMap {
   public readonly width: number;
   public readonly height: number;
 
-  private rows: boolean[][];
+  public rows: boolean[][];
 
   constructor(private maze: Maze) {
 
@@ -60,18 +60,6 @@ export class CollisionMap {
     return new Point2D(cellXInPixels, cellYInPixels);
   }
 
-  renderWalls(matrix: LedMatrixInstance) {
-    matrix.fgColor(rgbToHex(100, 100, 100));
-
-    for (let y = 0; y < this.rows.length; y++) {
-      const row = this.rows[y];
-      for (let x = 0; x < row.length; x++) {
-        const cell = row[x];
-        if (cell)
-          matrix.setPixel(x, y);
-      }
-    }
-  }
 
   getIsWall(pos: Point2D) {
     const row = this.rows[pos.y];
@@ -79,6 +67,17 @@ export class CollisionMap {
     const cell = row[pos.x];
     if (cell == undefined) throw new Error(`pos out of X bounds '${pos}'`);
     return cell == true;
+  }
+
+
+  public shootRay(from: Point2D, direction: Point2D) {
+    const positions = [];
+    let pos = from;
+    while (!this.getIsWall(pos)) {
+      positions.push(pos);
+      pos = pos.sum(direction);
+    }
+    return positions;
   }
 
   canPass(fromPos: Point2D, velocity: Point2D) {

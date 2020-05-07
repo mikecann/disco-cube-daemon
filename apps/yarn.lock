@@ -108,6 +108,11 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+"@tweenjs/tween.js@^18":
+  version "18.5.0"
+  resolved "https://registry.yarnpkg.com/@tweenjs/tween.js/-/tween.js-18.5.0.tgz#f2aa9e6052c6a314d85c9a8034146f9ae6d4e339"
+  integrity sha512-/qyhdvbc6vWsFuiK7Wq74ZMu1F/9sFRlBv2qnjeu70XI0HRC8zOfUqbXT2irVLCSVuCI/fI7HphGdbsbyQ/Q5w==
+
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
@@ -139,6 +144,11 @@
   integrity sha512-Hz57S0cH1Be94u1UO4kwp+1XwAk0GA5RrL16Gx0wZDLyP8gr+h5qQXFS4OygxjNZcE26cTMnT7s31AlezY+jbw==
   dependencies:
     "@types/node" "*"
+
+"@types/tween.js@^18.5.0":
+  version "18.5.0"
+  resolved "https://registry.yarnpkg.com/@types/tween.js/-/tween.js-18.5.0.tgz#27d10aafa36c75c72953f00936663546b2a28441"
+  integrity sha512-jx8DQOAYj9XOaa0sf0Ixy0bYhx3qFozyDiZnF8Mtfio6Uf9NJt/+RkuYHFmQ4DtHFty+wtVfN08jWJeYAfwcpA==
 
 abbrev@1:
   version "1.1.1"

@@ -77,6 +77,7 @@ export class MrNibbles {
       this.remainingSuperTicks--;
       if (this.remainingSuperTicks == 0) {
         this.state = "normal";
+        this.game.wallsRenderer.mrNibblesExitSuperMode();
       }
     }
 
@@ -86,22 +87,31 @@ export class MrNibbles {
     this.historyTrail.addSegment(this.position);
 
     const nibble = this.game.nibbles.find(n => n.position.equals(this.position));
-    if (nibble) this.game.destoryNibble(nibble);
+    if (nibble) {
+      this.game.destoryNibble(nibble);
+      this.game.wallsRenderer.nibbleCollected();
+    }
 
     const superNibble = this.game.superNibbles.find(n => n.position.equals(this.position));
     if (superNibble) {
       this.game.destorySuperNibble(superNibble);
       this.state = "super";
       this.remainingSuperTicks = startingSuperTicks;
+      this.game.wallsRenderer.mrNibblesEnterSuperMode();
     }
 
     const spider = this.game.spiders.find(n => n.position.equals(this.position));
     if (spider) {
       if (this.state == "super")
-        this.game.destroySpider(spider);
+        spider.die();
       else
-        this.reset();
+        this.die();
     }
+  }
+
+  die() {
+    this.reset();
+    this.game.wallsRenderer.mrNibblesKilled();
   }
 
   render(matrix: LedMatrixInstance) {

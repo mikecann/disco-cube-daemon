@@ -65,14 +65,14 @@ export const createCube = (matrix: LedMatrixInstance) => {
 
   //const drawBuffer = () => matrix.drawBuffer(buffer);
 
-  const animate = (renderfn: () => any, msPerFrame = 100, ) => {
+  const animate = (tickFn: (delta: number) => any, msPerFrame = 100, ) => {
     let timeSinceLastFrame = 0;
     matrix.afterSync((mat, dt, t) => {
 
       timeSinceLastFrame += dt;
       if (timeSinceLastFrame > msPerFrame) {
+        tickFn(timeSinceLastFrame);
         timeSinceLastFrame = 0;
-        renderfn();
       }
 
       setTimeout(() => matrix.sync(), 0);

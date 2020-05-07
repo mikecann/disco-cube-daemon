@@ -7,7 +7,7 @@ import { sortPossibleDirections } from "./utils";
 import { TrailRenderer } from "./TrailRenderer";
 import { Trail } from "./Trail";
 
-export type SpiderState = "searching" | "hunting" | "dead" | "respawning"
+export type SpiderState = "hunting"
 
 export class Spider {
 
@@ -17,6 +17,8 @@ export class Spider {
   private state: SpiderState;
   private historyTrail: Trail;
   private velocity: Point2D;
+
+  private mrNibblesLastSpottedAt: Point2D | undefined;
 
   constructor(private game: Game) { this.reset() }
 
@@ -33,7 +35,25 @@ export class Spider {
 
     if (this.state == "hunting") {
 
+      const findMrNibbles = () => {
+
+        for (let dir of Point2D.directions) {
+          const positions = this.game.collision.shootRay(this.position, dir);
+          const position = positions.find(p => this.game.mrNibbles.position.equals(p));
+          if (position) return { dir, position };
+        }
+
+        return undefined;
+      }
+
       const getNewVelocity = () => {
+
+        const mrNibblesFind = findMrNibbles();
+        if (mrNibblesFind) {
+          this.mrNibblesLastSpottedAt = mrNibblesFind.position;
+          return mrNibblesFind.dir;
+        }
+
         const left = this.velocity.left();
 
         const isWallToLeft = this.game.collision.getIsWall(this.position.sum(left));
@@ -53,19 +73,31 @@ export class Spider {
         return sorted[0];
       }
 
-
       this.velocity = getNewVelocity();
 
       this.position = this.position.sum(this.velocity);
       this.colorTrail.addSegment(this.position);
       this.historyTrail.addSegment(this.position);
+
+      if (this.game.mrNibbles.position.equals(this.position))
+        this.game.mrNibbles.die();
+
+      if (this.mrNibblesLastSpottedAt)
+        if (this.mrNibblesLastSpottedAt.equals(this.position))
+          this.mrNibblesLastSpottedAt = undefined;
     }
   }
 
   render(matrix: LedMatrixInstance) {
     this.trailRenderer.render(matrix);
 
-    matrix.fgColor(rgbToHex(255, 0, 255)).setPixel(this.position.x, this.position.y);
+    const color = this.mrNibblesLastSpottedAt ? rgbToHex(255, 0, 255) : rgbToHex(160, 0, 160);
+    matrix.fgColor(color).setPixel(this.position.x, this.position.y);
+  }
+
+  die() {
+    this.game.wallsRenderer.spiderKilled();
+    this.game.destroySpider(this);
   }
 
 }

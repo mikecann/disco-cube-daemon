@@ -10,6 +10,8 @@ import { narray } from "../../../src/utils/misc";
 import { createCube } from "../utils/rendering";
 import { CollisionMap } from "./CollisionMap";
 import { shuffle } from "../../../src/utils/misc"
+import { WallsRenderer } from "./WallsRenderer";
+import TWEEN from "@tweenjs/tween.js"
 
 const sideLength = 64;
 const sides = 6;
@@ -22,6 +24,8 @@ export class Game {
 
   public maze: Maze;
   public collision: CollisionMap;
+  public wallsRenderer: WallsRenderer;
+
 
   public spiders: Spider[];
   public mrNibbles: MrNibbles;
@@ -29,6 +33,8 @@ export class Game {
   public superNibbles: SuperNibble[];
 
   public spawnPoint: Point2D;
+
+  private timeSinceLastFrame = 0;
 
   constructor(private matrix: LedMatrixInstance) {
   }
@@ -39,6 +45,7 @@ export class Game {
 
     this.maze = new Maze(cellsW, cellsH);
     this.collision = new CollisionMap(this.maze);
+    this.wallsRenderer = new WallsRenderer(this.collision);
 
     this.spiders = narray(spiders).map(_ => new Spider(this));
 
@@ -47,13 +54,19 @@ export class Game {
     this.superNibbles = shuffle(this.nibbles).slice(0, superNibbles).map(o => new SuperNibble(o.position));
   }
 
-  private update() {
-    this.spiders.forEach(s => s.update());
-    this.mrNibbles.update();
+  private update(delta: number) {
+    this.timeSinceLastFrame += delta;
+    if (this.timeSinceLastFrame > 100) {
+      this.timeSinceLastFrame = 0;
+
+      this.spiders.forEach(s => s.update());
+      this.mrNibbles.update();
+    }
+    TWEEN.update();
   }
 
   private render() {
-    this.collision.renderWalls(this.matrix);
+    this.wallsRenderer.render(this.matrix);
     this.nibbles.forEach(s => s.render(this.matrix));
     this.superNibbles.forEach(s => s.render(this.matrix));
     this.spiders.forEach(s => s.render(this.matrix));
@@ -72,10 +85,11 @@ export class Game {
     this.spiders = this.spiders.filter(n => n != spider);
   }
 
+
   start() {
-    createCube(this.matrix).animate(() => {
-      this.update();
+    createCube(this.matrix).animate(delta => {
+      this.update(delta);
       this.render();
-    })
+    }, 32)
   }
 }
