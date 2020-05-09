@@ -1,4 +1,5 @@
 import { randomOne } from "../../../src/utils/misc";
+import { randomColor } from "../utils/rendering";
 
 
 export class Point2D {
@@ -7,6 +8,12 @@ export class Point2D {
   public sum(p2: Point2D) {
     return new Point2D(this.x + p2.x, this.y + p2.y);
   }
+
+  public multiplyBy(scalar: number) {
+    return new Point2D(this.x * scalar, this.y * scalar);
+  }
+
+
 
   public toString() {
     return `${this.x}, ${this.y}`

@@ -1,11 +1,34 @@
 import { LedMatrixInstance } from "rpi-led-matrix";
 import { narray } from "../../../src/utils/misc";
+import { sideLength, bufferSizePerSize, sidesCount } from "./const";
 
-const sideLength = 64;
-const sidesCount = 6;
-const pixelCount = sideLength * sideLength;
-const bufferSizePerSize = pixelCount * 3;
-const totalBufferSize = bufferSizePerSize * sidesCount;
+const sideRotations = {
+  [0]: 0,
+  [1]: 0,
+  [2]: 0,
+  [3]: 90,
+  [4]: 0,
+  [5]: 90
+} as const
+
+type Point2D = {
+  x: number;
+  y: number;
+}
+
+const rotatePixelCW = (pixel: Point2D) => {
+  return {
+    x: sideLength - 1 - pixel.y,
+    y: pixel.x,
+  };
+}
+
+const rotatePixel = (x: number, y: number, degrees: number) => {
+  let pixel = { x, y };
+  for (let i = 0; i < Math.floor(degrees / 90); i++)
+    pixel = rotatePixelCW(pixel);
+  return pixel;
+}
 
 export const createCubeSide = (matrix: LedMatrixInstance, sideIndex: number) => {
   //const bufferOffset = sideIndex * bufferSizePerSize;
@@ -24,14 +47,38 @@ export const createCubeSide = (matrix: LedMatrixInstance, sideIndex: number) => 
     }
   }
 
-  const drawRect = (x: number, y: number, width: number, height: number) =>
-    matrix.fgColor(0xFFFFFF).drawRect(x, pixelOffset + y, width, height);
+  const drawRect = (x: number, y: number, width: number, height: number) => {
+    matrix.drawRect(x, pixelOffset + y, width, height);
+  }
 
-  const drawText = (text: string, x: number, y: number) =>
-    matrix.fgColor(0xFFFFFF)
-      .drawText(text, x, pixelOffset + y)
 
-  const setPixel = (x: number, y: number, color: number) => matrix.fgColor(color).setPixel(x, pixelOffset + y);
+  const drawText = (text: string, x: number, y: number) => {
+    matrix.drawText(text, x, pixelOffset + y)
+  }
+
+  // const rotateSceneryCW = (item: SceneryItem, mapSize: Dimensions2D): SceneryItem => {
+  //   const position = {
+  //     x: mapSize.width - 1 - item.position.y,
+  //     y: item.position.x,
+  //   };
+  //   return {
+  //     ...item,
+  //     position,
+  //     orientation: rotateOrientationByDegrees(item.orientation, 90),
+  //   };
+  // };
+
+  const setPixel = (x: number, y: number, color?: number) => {
+    if (color != undefined) matrix.fgColor(color);
+
+    // Rotate Pixel
+    const pixel = rotatePixel(x, y, sideRotations[sideIndex]);
+
+    // Offet Pixel
+    pixel.y += pixelOffset;
+
+    matrix.setPixel(pixel.x, pixel.y);
+  }
 
   const setPixels = (rgb: number[]) => {
     if (rgb.length != bufferSizePerSize)

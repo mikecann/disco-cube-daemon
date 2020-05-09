@@ -13,11 +13,12 @@ export class CollisionMap {
 
   constructor(private maze: Maze) {
 
-    this.height = (maze.height * 2) + 1;
-    this.width = (maze.width * 2) + 1;
+    this.height = (maze.height * 2) + 2;
+    this.width = (maze.width * 2) + 2;
 
     this.rows = narray(this.height).map(_ => narray(this.width).map(__ => false));
 
+    // Fill in the bulk of the maze
     for (let y = 0; y < maze.rows.length; y++) {
       const row = maze.rows[y];
       for (let x = 0; x < row.length; x++) {
@@ -51,6 +52,8 @@ export class CollisionMap {
         }
       }
     }
+
+    // Now hack the right hand side of the maze to open it 
 
   }
 

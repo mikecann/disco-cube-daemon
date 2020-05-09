@@ -13,9 +13,11 @@ export const defaultMatrixOptions: MatrixOptions = {
   brightness: 100
 } as const
 
+LedMatrixUtils.encodeMappers()
+
 export const defaultMatrixRuntimeOptions: RuntimeOptions = {
   ...LedMatrix.defaultRuntimeOptions(),
-  gpioSlowdown: 2,
+  gpioSlowdown: 4,
 } as const
 
 export const createMatrix = (matrixOptionOverrides?: Partial<MatrixOptions>, runtimeOverrides?: Partial<RuntimeOptions>) => new LedMatrix(
