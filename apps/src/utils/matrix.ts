@@ -1,5 +1,10 @@
-import { MatrixOptions, LedMatrix, LedMatrixUtils, PixelMapperType, RuntimeOptions } from "rpi-led-matrix";
-
+import {
+  MatrixOptions,
+  LedMatrix,
+  LedMatrixUtils,
+  PixelMapperType,
+  RuntimeOptions,
+} from "rpi-led-matrix";
 
 export const defaultMatrixOptions: MatrixOptions = {
   ...LedMatrix.defaultMatrixOptions(),
@@ -10,17 +15,21 @@ export const defaultMatrixOptions: MatrixOptions = {
   pixelMapperConfig: LedMatrixUtils.encodeMappers({ type: PixelMapperType.U }),
   showRefreshRate: true,
   pwmDitherBits: 2,
-  brightness: 100
-} as const
+  brightness: 100,
+} as const;
 
-LedMatrixUtils.encodeMappers()
+LedMatrixUtils.encodeMappers();
 
 export const defaultMatrixRuntimeOptions: RuntimeOptions = {
   ...LedMatrix.defaultRuntimeOptions(),
   gpioSlowdown: 4,
-} as const
+} as const;
 
-export const createMatrix = (matrixOptionOverrides?: Partial<MatrixOptions>, runtimeOverrides?: Partial<RuntimeOptions>) => new LedMatrix(
-  { ...defaultMatrixOptions, ...matrixOptionOverrides },
-  { ...defaultMatrixRuntimeOptions, ...runtimeOverrides }
-);
+export const createMatrix = (
+  matrixOptionOverrides?: Partial<MatrixOptions>,
+  runtimeOverrides?: Partial<RuntimeOptions>
+) =>
+  new LedMatrix(
+    { ...defaultMatrixOptions, ...matrixOptionOverrides },
+    { ...defaultMatrixRuntimeOptions, ...runtimeOverrides }
+  );

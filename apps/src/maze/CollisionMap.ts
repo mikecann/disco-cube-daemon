@@ -5,18 +5,16 @@ import { narray } from "../../../src/utils/misc";
 import { rgbToHex } from "../utils/rendering";
 
 export class CollisionMap {
-
   public readonly width: number;
   public readonly height: number;
 
   public rows: boolean[][];
 
   constructor(private maze: Maze) {
+    this.height = maze.height * 2 + 2;
+    this.width = maze.width * 2 + 2;
 
-    this.height = (maze.height * 2) + 2;
-    this.width = (maze.width * 2) + 2;
-
-    this.rows = narray(this.height).map(_ => narray(this.width).map(__ => false));
+    this.rows = narray(this.height).map((_) => narray(this.width).map((__) => false));
 
     // Fill in the bulk of the maze
     for (let y = 0; y < maze.rows.length; y++) {
@@ -24,8 +22,8 @@ export class CollisionMap {
       for (let x = 0; x < row.length; x++) {
         const cell = row[x];
 
-        const cellXInPixels = 1 + (x * 2);
-        const cellYInPixels = 1 + (y * 2);
+        const cellXInPixels = 1 + x * 2;
+        const cellYInPixels = 1 + y * 2;
 
         if (cell.left) {
           this.rows[cellYInPixels - 1][cellXInPixels - 1] = true;
@@ -53,16 +51,14 @@ export class CollisionMap {
       }
     }
 
-    // Now hack the right hand side of the maze to open it 
-
+    // Now hack the right hand side of the maze to open it
   }
 
   mazeToPixelPosition(mazePosition: Point2D) {
-    const cellXInPixels = 1 + (mazePosition.x * 2);
-    const cellYInPixels = 1 + (mazePosition.y * 2);
+    const cellXInPixels = 1 + mazePosition.x * 2;
+    const cellYInPixels = 1 + mazePosition.y * 2;
     return new Point2D(cellXInPixels, cellYInPixels);
   }
-
 
   getIsWall(pos: Point2D) {
     const row = this.rows[pos.y];
@@ -71,7 +67,6 @@ export class CollisionMap {
     if (cell == undefined) throw new Error(`pos out of X bounds '${pos}'`);
     return cell == true;
   }
-
 
   public shootRay(from: Point2D, direction: Point2D) {
     const positions = [];
@@ -85,8 +80,7 @@ export class CollisionMap {
 
   canPass(fromPos: Point2D, velocity: Point2D) {
     const nextPos = fromPos.sum(velocity);
-    if (this.isOutOfBounds(nextPos))
-      return false;
+    if (this.isOutOfBounds(nextPos)) return false;
 
     return !this.getIsWall(nextPos);
   }
@@ -98,12 +92,16 @@ export class CollisionMap {
   }
 
   getPossibleDirections(fromPos: Point2D): Point2D[] {
-    return Point2D.directions.filter(d => this.canPass(fromPos, d));
+    return Point2D.directions.filter((d) => this.canPass(fromPos, d));
   }
 
-  enumerateCells = () => narray(this.height).map(y => narray(this.width).map(x => {
-    const pos = new Point2D(x, y);
-    return ({ pos, isWall: this.getIsWall(pos) })
-  })).flat();
-
+  enumerateCells = () =>
+    narray(this.height)
+      .map((y) =>
+        narray(this.width).map((x) => {
+          const pos = new Point2D(x, y);
+          return { pos, isWall: this.getIsWall(pos) };
+        })
+      )
+      .flat();
 }

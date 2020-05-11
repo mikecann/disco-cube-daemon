@@ -1,25 +1,13 @@
-import { Particle } from "./Particle";
-import { pixelsPerSide, matrixWidth, matrixHeight, sideWidth, sideHeight } from "../utils/const";
+import { pixelsPerFace, matrixWidth, matrixHeight, faceWidth, faceHeight } from "../utils/const";
 import { Point2D } from "../maze/Point2D";
 import { randomIntRange, randomRange } from "../utils/misc";
 import { LedMatrixInstance } from "rpi-led-matrix";
 
 // https://peeke.nl/simulating-blobs-of-fluid
 
-
-
 import { SpatialHashMap } from "./SpacialHashmap";
 
-import {
-  multiplyScalar,
-  length,
-  lengthSq,
-  add,
-  subtract,
-  unit,
-  unitApprox,
-  clone
-} from "./math";
+import { multiplyScalar, length, lengthSq, add, subtract, unit, unitApprox, clone } from "./math";
 
 export function createSim() {
   const calculateViewportHeight = (perspectiveAngle: number, distance: number) => {
@@ -35,13 +23,13 @@ export function createSim() {
   const STIFFNESS = 35;
   const STIFFNESS_NEAR = 100;
   const REST_DENSITY = 5;
-  const INTERACTION_RADIUS = (viewportHeight / GRID_CELLS) * 2.5 * 38 / Math.sqrt(PARTICLE_COUNT);
+  const INTERACTION_RADIUS = ((viewportHeight / GRID_CELLS) * 2.5 * 38) / Math.sqrt(PARTICLE_COUNT);
   const INTERACTION_RADIUS_INV = 1 / INTERACTION_RADIUS;
   const INTERACTION_RADIUS_SQ = INTERACTION_RADIUS ** 2;
 
   const GRAVITY_FORCE = [0, -35];
   const SCROLL_FORCE = [0, 0];
-  const ACCELERATION_FORCE = [0, 0]
+  const ACCELERATION_FORCE = [0, 0];
 
   // const particleMeshes = [
   //   gradientCircle(INTERACTION_RADIUS, REST_DENSITY, new THREE.Color(1, 0, 0)),
@@ -61,9 +49,8 @@ export function createSim() {
     g: new Float32Array(PARTICLE_COUNT),
     color: new Uint8Array(PARTICLE_COUNT),
     mesh: [],
-    neighbors: []
+    neighbors: [],
   };
-
 
   // const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
   // renderer.setPixelRatio(dpr);
@@ -93,10 +80,8 @@ export function createSim() {
     t: viewportHeight * 0.485,
     b: viewportHeight * -0.485,
     radius: viewportHeight * 0.485,
-    radiusSq: (viewportHeight * 0.485) ** 2
+    radiusSq: (viewportHeight * 0.485) ** 2,
   };
-
-
 
   const mass = (i: number) => {
     return 0.85 + state.color[i] / 10;
@@ -130,14 +115,8 @@ export function createSim() {
   // blendPointsPass.uniforms.grid.value = dataTexture;
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
-    state.x[i] =
-      Math.cos(Math.random() * 2 * Math.PI) *
-      Math.sqrt(Math.random()) *
-      canvasRect.r;
-    state.y[i] =
-      Math.cos(Math.random() * 2 * Math.PI) *
-      Math.sqrt(Math.random()) *
-      canvasRect.t;
+    state.x[i] = Math.cos(Math.random() * 2 * Math.PI) * Math.sqrt(Math.random()) * canvasRect.r;
+    state.y[i] = Math.cos(Math.random() * 2 * Math.PI) * Math.sqrt(Math.random()) * canvasRect.t;
     state.oldX[i] = state.x[i];
     state.oldY[i] = state.y[i];
     state.vx[i] = 0;
@@ -155,7 +134,7 @@ export function createSim() {
   //   scene.add(mesh);
   // }
 
-  let acceleration = [0, 0]
+  let acceleration = [0, 0];
 
   const simulate = (dt: number) => {
     hashMap.clear();
@@ -164,9 +143,9 @@ export function createSim() {
     // SCROLL_FORCE[1] = Math.min(140, Math.max(-140, (newScroll - scroll) / dt / 5))
     // scroll = newScroll
 
-    ACCELERATION_FORCE[0] = acceleration[0] / dt * 2
-    ACCELERATION_FORCE[1] = acceleration[1] / dt * 2
-    acceleration = [0, 0]
+    ACCELERATION_FORCE[0] = (acceleration[0] / dt) * 2;
+    ACCELERATION_FORCE[1] = (acceleration[1] / dt) * 2;
+    acceleration = [0, 0];
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       // Update old position
@@ -204,7 +183,6 @@ export function createSim() {
       // Update
       //state.mesh[i].position.set(state.x[i], state.y[i], 0);
     }
-
   };
 
   const applyGlobalForces = (i: number, dt: number) => {
@@ -231,11 +209,7 @@ export function createSim() {
     const gridX = (state.x[i] / canvasRect.w + 0.5) * GRID_CELLS;
     const gridY = (state.y[i] / canvasRect.h + 0.5) * GRID_CELLS;
     const radius = (INTERACTION_RADIUS / canvasRect.w) * GRID_CELLS;
-    const results = hashMap.query(
-      gridX,
-      gridY,
-      radius
-    );
+    const results = hashMap.query(gridX, gridY, radius);
 
     const neighbors = [];
 
@@ -278,11 +252,8 @@ export function createSim() {
       const nPos = [state.x[n], state.y[n]];
 
       const magnitude = state.p[i] * g + state.pNear[i] * g * g;
-      const f = state.color[i] === state.color[n] ? .99 : 1;
-      const d = multiplyScalar(
-        unitApprox(subtract(nPos, pos)),
-        magnitude * f * dt * dt
-      );
+      const f = state.color[i] === state.color[n] ? 0.99 : 1;
+      const d = multiplyScalar(unitApprox(subtract(nPos, pos)), magnitude * f * dt * dt);
 
       const massI = mass(i);
       const massJ = mass(n);
@@ -316,28 +287,28 @@ export function createSim() {
 
   const contain = (i: number, dt: number) => {
     const pos = [state.x[i], state.y[i]];
-    const unitPos = unit(pos)
+    const unitPos = unit(pos);
     const m = mass(i);
-    const antiStickVelocity = multiplyScalar(unitPos, INTERACTION_RADIUS * 2)
+    const antiStickVelocity = multiplyScalar(unitPos, INTERACTION_RADIUS * 2);
 
     if (state.x[i] < 0) {
       state.x[i] = 0;
-      state.oldX[i] += antiStickVelocity[0] * dt / m;
+      state.oldX[i] += (antiStickVelocity[0] * dt) / m;
     }
 
     if (state.y[i] < 0) {
       state.y[i] = 0;
-      state.oldY[i] += antiStickVelocity[1] * dt / m
+      state.oldY[i] += (antiStickVelocity[1] * dt) / m;
     }
 
-    if (state.x[i] > sideWidth) {
-      state.x[i] = sideWidth;
-      state.oldX[i] += antiStickVelocity[0] * dt / m;
+    if (state.x[i] > faceWidth) {
+      state.x[i] = faceWidth;
+      state.oldX[i] += (antiStickVelocity[0] * dt) / m;
     }
 
-    if (state.y[i] > sideHeight) {
-      state.y[i] = sideHeight;
-      state.oldY[i] += antiStickVelocity[1] * dt / m
+    if (state.y[i] > faceHeight) {
+      state.y[i] = faceHeight;
+      state.oldY[i] += (antiStickVelocity[1] * dt) / m;
     }
 
     // if (lengthSq(pos) > canvasRect.radiusSq) {
@@ -367,12 +338,12 @@ export function createSim() {
   const render = (matrix: LedMatrixInstance) => {
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       matrix.fgColor(0xffffff);
-      matrix.setPixel(state.x[i], state.y[i])
+      matrix.setPixel(state.x[i], state.y[i]);
     }
-  }
+  };
 
   return {
     update,
-    render
-  }
+    render,
+  };
 }

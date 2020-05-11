@@ -3,11 +3,14 @@ import { hang } from "../../../src/utils/misc";
 import { createMatrix } from "../utils/matrix";
 
 async function bootstrap() {
-  const matrix = createMatrix({
-    showRefreshRate: false,
-  }, {
-    gpioSlowdown: 4
-  });
+  const matrix = createMatrix(
+    {
+      showRefreshRate: false,
+    },
+    {
+      gpioSlowdown: 4,
+    }
+  );
 
   console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
 
@@ -18,5 +21,4 @@ async function bootstrap() {
   await hang();
 }
 
-
-bootstrap().catch(e => console.error(`ERROR: `, e))
+bootstrap().catch((e) => console.error(`ERROR: `, e));

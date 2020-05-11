@@ -1,10 +1,9 @@
 import { Point2D } from "./Point2D";
 
 export class Trail {
+  public readonly segments: Point2D[] = [];
 
-  public readonly segments: Point2D[] = []
-
-  constructor(public readonly maxLength = 10) { }
+  constructor(public readonly maxLength = 10) {}
 
   addSegment(position: Point2D) {
     this.segments.push(position);
@@ -12,10 +11,10 @@ export class Trail {
   }
 
   contains(segment: Point2D) {
-    return this.segments.find(s => s.equals(segment))
+    return this.segments.find((s) => s.equals(segment));
   }
 
   getAge(segment: Point2D) {
-    return this.segments.length - this.segments.findIndex(s => s.equals(segment))
+    return this.segments.length - this.segments.findIndex((s) => s.equals(segment));
   }
 }

@@ -17,3 +17,7 @@ export function randomIntRange(min: number, max: number): number {
 export function randomRange(min: number, max: number): number {
   return Math.random() * (max - min) + min;
 }
+
+export const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+export const zeroPad = (num: number, places: number) => String(num).padStart(places, '0')

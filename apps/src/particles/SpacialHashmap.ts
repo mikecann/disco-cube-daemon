@@ -1,15 +1,14 @@
-const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 export class SpatialHashMap {
-  private grid: number[][]
+  public grid: number[][];
 
   constructor(public width: number, public height: number) {
-
     this.grid = new Array(width * height).fill(null).map(() => []);
   }
 
   clear() {
-    this.grid.forEach(cell => {
+    this.grid.forEach((cell) => {
       cell.splice(0);
     });
   }

@@ -3,8 +3,7 @@ import { multiplyColor } from "../utils/rendering";
 import { Trail } from "./Trail";
 
 export class TrailRenderer {
-
-  constructor(public readonly trail: Trail, public readonly color: number) { }
+  constructor(public readonly trail: Trail, public readonly color: number) {}
 
   render(matrix: LedMatrixInstance) {
     const step = 1 / this.trail.maxLength;
@@ -14,5 +13,4 @@ export class TrailRenderer {
       matrix.fgColor(color).setPixel(this.trail.segments[i].x, this.trail.segments[i].y);
     }
   }
-
 }

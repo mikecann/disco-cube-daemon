@@ -7,10 +7,9 @@ import { sortPossibleDirections } from "./utils";
 import { TrailRenderer } from "./TrailRenderer";
 import { Trail } from "./Trail";
 
-export type SpiderState = "hunting"
+export type SpiderState = "hunting";
 
 export class Spider {
-
   public position: Point2D;
   private colorTrail: Trail;
   private trailRenderer: TrailRenderer;
@@ -20,7 +19,9 @@ export class Spider {
 
   private mrNibblesLastSpottedAt: Point2D | undefined;
 
-  constructor(private game: Game) { this.reset() }
+  constructor(private game: Game) {
+    this.reset();
+  }
 
   reset() {
     this.state = "hunting";
@@ -32,22 +33,18 @@ export class Spider {
   }
 
   update() {
-
     if (this.state == "hunting") {
-
       const findMrNibbles = () => {
-
         for (let dir of Point2D.directions) {
           const positions = this.game.collision.shootRay(this.position, dir);
-          const position = positions.find(p => this.game.mrNibbles.position.equals(p));
+          const position = positions.find((p) => this.game.mrNibbles.position.equals(p));
           if (position) return { dir, position };
         }
 
         return undefined;
-      }
+      };
 
       const getNewVelocity = () => {
-
         const mrNibblesFind = findMrNibbles();
         if (mrNibblesFind) {
           this.mrNibblesLastSpottedAt = mrNibblesFind.position;
@@ -60,18 +57,17 @@ export class Spider {
         if (!isWallToLeft) return left;
 
         const isWallForward = this.game.collision.getIsWall(this.position.sum(this.velocity));
-        if (!isWallForward)
-          return this.velocity;
+        if (!isWallForward) return this.velocity;
 
         const possibles = this.game.collision.getPossibleDirections(this.position);
         if (possibles.length == 0) throw new Error(`there are no possibles, this is impossible`);
 
-        const sorted = sortPossibleDirections(possibles, dir =>
+        const sorted = sortPossibleDirections(possibles, (dir) =>
           this.historyTrail.getAge(this.position.sum(dir))
-        )
+        );
 
         return sorted[0];
-      }
+      };
 
       this.velocity = getNewVelocity();
 
@@ -79,8 +75,7 @@ export class Spider {
       this.colorTrail.addSegment(this.position);
       this.historyTrail.addSegment(this.position);
 
-      if (this.game.mrNibbles.position.equals(this.position))
-        this.game.mrNibbles.die();
+      if (this.game.mrNibbles.position.equals(this.position)) this.game.mrNibbles.die();
 
       if (this.mrNibblesLastSpottedAt)
         if (this.mrNibblesLastSpottedAt.equals(this.position))
@@ -99,5 +94,4 @@ export class Spider {
     this.game.wallsRenderer.spiderKilled();
     this.game.destroySpider(this);
   }
-
 }

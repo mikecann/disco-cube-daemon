@@ -3,14 +3,10 @@ import { createMatrix } from "./utils/matrix";
 import { randomColor } from "./utils/rendering";
 
 class Pulser {
-  constructor(
-    readonly x: number,
-    readonly y: number,
-    readonly f: number
-  ) { }
+  constructor(readonly x: number, readonly y: number, readonly f: number) {}
 
   nextColor(t: number): number {
-    const brightness = 0xFF & Math.max(0, (255 * (Math.sin(this.f * t / 1000))));
+    const brightness = 0xff & Math.max(0, 255 * Math.sin((this.f * t) / 1000));
     return (brightness << 16) | (brightness << 8) | brightness;
   }
 }
@@ -31,7 +27,7 @@ async function bootstrap() {
   }
 
   matrix.afterSync((mat, dt, t) =>
-    pulsers.map(pulser => {
+    pulsers.map((pulser) => {
       matrix.fgColor(pulser.nextColor(t)).setPixel(pulser.x, pulser.y);
     })
   );
@@ -41,5 +37,4 @@ async function bootstrap() {
   await hang();
 }
 
-
-bootstrap().catch(e => console.error(`ERROR: `, e))
+bootstrap().catch((e) => console.error(`ERROR: `, e));

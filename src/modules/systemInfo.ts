@@ -21,7 +21,7 @@ export const monitorSystemInfo = (
     const essential = EssentialSystemInfo({
       cpuLoadsPercent: currentLoad.cpus.map((c) => c.load),
       memUsagePercent: (mem.used / mem.total) * 100,
-      cpuTemperature: cpuTemperature.main
+      cpuTemperature: cpuTemperature.main,
     });
 
     essentialInfoCallback(essential);
