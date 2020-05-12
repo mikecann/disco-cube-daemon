@@ -2,6 +2,7 @@ import { Cube } from "./Cube";
 import { faceLength, bufferSizePerFace, faceNeighbours, faceWidth, faceHeight, faceOrientations } from "./const";
 import { Point2D } from "../maze/Point2D";
 import { rotatePixel, rgbToHex } from "./rendering";
+import { clamp } from "./misc";
 
 export class CubeFace {
 
@@ -36,7 +37,11 @@ export class CubeFace {
   setPixel(x: number, y: number, color?: number) {
     if (color != undefined) this.cube.matrix.fgColor(color);
 
-    // Rotate Pixel
+    // Clamp
+    x = clamp(x, 0, faceWidth - 1);
+    y = clamp(y, 0, faceHeight - 1);
+
+    // Rotate Pixel    
     const pixel = rotatePixel(x, y, faceOrientations[this.index].w);
 
     // Offet Pixel

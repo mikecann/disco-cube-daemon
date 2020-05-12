@@ -2,39 +2,33 @@ import { pixelsPerFace, matrixWidth, matrixHeight, faceWidth, faceHeight, facesC
 import { Point2D } from "../maze/Point2D";
 import { randomIntRange, randomRange } from "../utils/misc";
 import { LedMatrixInstance } from "rpi-led-matrix";
-import { rgbToHex } from "../utils/rendering";
 import { Cube } from "../utils/Cube";
 import { Accelerometer } from "../utils/Accelerometer";
-import { SpatialHashMap } from "../particles/SpacialHashmap";
-import { SideReboundingParticle } from "../particles/SideReboundingParticle";
-import { SideFlowingParticle } from "./SideFlowingParticle";
+import { SpatialHashMap } from "../particles/SpatialHashMap";
+import { narray } from "../../../src/utils/misc";
+import { SideFlowingCollidingParticle } from "./SideFlowingCollidingParticle";
 
-export class Simulation3 {
-  private particles: SideFlowingParticle[];
+export class Simulation {
+  private particles: SideFlowingCollidingParticle[];
+  private hashmaps: SpatialHashMap[];
 
   constructor(private cube: Cube, private accel: Accelerometer) {
     this.init();
   }
 
   init() {
-    const numParticles = (pixelsPerFace + pixelsPerFace / 2) / 10;
+    const numParticles = (pixelsPerFace) * 1;
+
     this.particles = [];
+    this.hashmaps = narray(facesCount).map(_ => new SpatialHashMap(faceWidth, faceHeight))
 
     for (let i = 0; i < numParticles; i++)
-      this.particles.push(new SideFlowingParticle(
-        this.cube.faces[0],
+      this.particles.push(new SideFlowingCollidingParticle(
+        this.cube.faces[randomIntRange(0, 5)],
+        this.hashmaps,
         new Point2D(randomIntRange(0, faceWidth), randomIntRange(0, faceHeight)),
         new Point2D(randomRange(-0.2, 0.2), randomRange(-0.2, 0.2))
       ));
-
-    // this.particles.push(
-    //   new SideFlowingParticle(
-    //     this.cube.faces[4],
-    //     new Point2D((faceWidth / 2), faceHeight / 2),
-    //     new Point2D(0.5, 0.15),
-    //     rgbToHex(255, 0, 0)
-    //   )
-    // );
   }
 
   update(delta: number) {
@@ -44,7 +38,6 @@ export class Simulation3 {
     for (let particle of this.particles) {
       particle.applyForce(accelForce);
       particle.update(delta);
-      particle.velocity = particle.velocity.multiplyBy(0.9);
     }
   }
 

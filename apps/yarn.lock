@@ -133,11 +133,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.4.tgz#1581d6c16e3d4803eb079c87d4ac893ee7501c2c"
   integrity sha512-x26ur3dSXgv5AwKS0lNfbjpCakGIduWU1DU91Zz58ONRWrIKGunmZBNv4P7N+e27sJkiGDsw/3fT4AtsqQBrBA==
 
-"@types/p2@^0.7.36":
-  version "0.7.36"
-  resolved "https://registry.yarnpkg.com/@types/p2/-/p2-0.7.36.tgz#adf412ff0fc3dc2f4a0e979ec78a02e3d94862f4"
-  integrity sha512-D6WXEJ0B+TLOr6oXdXb/NROFJebW/D8QUgue25hUe158nwUk2rksCXHSNcOLsXrlZiGQyN2EUAYA4PF9XLqBkQ==
-
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
@@ -1224,13 +1219,6 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-p2@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/p2/-/p2-0.7.1.tgz#25f2474d9bc3a6d3140a1da26a67c9e118ac9543"
-  integrity sha1-JfJHTZvDptMUCh2iamfJ4RislUM=
-  dependencies:
-    poly-decomp "0.1.1"
-
 package-json@^6.3.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/package-json/-/package-json-6.5.0.tgz#6feedaca35e75725876d0b0e64974697fed145b0"
@@ -1291,11 +1279,6 @@ please-upgrade-node@^3.2.0:
   integrity sha512-gQR3WpIgNIKwBMVLkpMUeR3e1/E1y42bqDQZfql+kDeXd8COYfM8PQA4X6y7a8u9Ua9FHmsrrmirW2vHs45hWg==
   dependencies:
     semver-compare "^1.0.0"
-
-poly-decomp@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/poly-decomp/-/poly-decomp-0.1.1.tgz#9f68c4fa558663791c9ba4c2df7283f3096c23c9"
-  integrity sha1-n2jE+lWGY3kcm6TC33KD8wlsI8k=
 
 prebuild-install@^5.3.0:
   version "5.3.3"

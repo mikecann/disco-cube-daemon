@@ -1,0 +1,1 @@
+declare module "lucy-b2";

@@ -23,7 +23,10 @@ export class Cube {
         timeSinceLastFrame = 0;
       }
 
-      setTimeout(() => this.matrix.sync(), 0);
+      // Defer sink to next tick
+      setTimeout(() => {
+        this.matrix.sync();
+      }, 0);
     });
     this.matrix.sync();
   };

@@ -4,14 +4,15 @@ import { rgbToHex, randomColor } from "../utils/rendering";
 import { matrixWidth, matrixHeight, faceWidth, faceHeight } from "../utils/const";
 import { CubeFace } from "../utils/CubeFace";
 import { getQuaternionDifference } from "../utils/quaternion";
+import { SpatialHashMap } from "./SpatialHashMap";
 
 const dampen = 0.5;
 const gravity = new Point2D(0, 0.9);
 
-export class SideReboundingParticle {
+export class Particle {
   constructor(
     private face: CubeFace,
-    private particles: SideReboundingParticle[],
+    private hashmap: SpatialHashMap,
     public position = Point2D.zero,
     public velocity = Point2D.zero,
     private color = randomColor()
@@ -23,51 +24,47 @@ export class SideReboundingParticle {
     const deltaV = this.velocity.multiplyBy(delta / 32);
     let newPos = this.position.sum(deltaV);
 
-    if (this.collidesWithOthers(new Point2D(newPos.x, this.position.y))) {
+    if (this.hashmap.has(new Point2D(newPos.x, this.position.y), this)) {
       newPos = newPos.setX(this.position.x);
       this.velocity = this.velocity.invertX().multiplyBy(dampen);
     }
 
-    if (this.collidesWithOthers(new Point2D(this.position.x, newPos.y))) {
+    if (this.hashmap.has(new Point2D(this.position.x, newPos.y), this)) {
       newPos = newPos.setY(this.position.y);
       this.velocity = this.velocity.invertY().multiplyBy(dampen);
     }
 
-    this.position = newPos;
+    newPos = this.containWithFace(newPos);
 
-    this.containWithFace();
+    if (!this.hashmap.has(newPos, this)) {
+      this.hashmap.remove(this.position);
+      this.position = newPos;
+      this.hashmap.set(this.position, this);
+    }
   }
 
-  private collidesWithOthers(atPos: Point2D) {
-    for (let particle of this.particles) {
-      if (particle == this) continue;
-      const x = Math.round(particle.position.x);
-      const y = Math.round(particle.position.y);
-      if (x == atPos.x && y == atPos.y) return true;
-    };
-    return false;
-  }
-
-  private containWithFace() {
+  private containWithFace(newPos: Point2D) {
     if (this.position.x < 0) {
-      this.position = this.position.setX(-this.position.x);
+      newPos = this.position.setX(-this.position.x);
       this.velocity = new Point2D(-this.velocity.x * dampen, this.velocity.y * dampen);
     }
 
     if (this.position.x >= faceWidth) {
-      this.position = this.position.setX(faceWidth - (this.position.x - faceWidth));
+      newPos = this.position.setX(faceWidth - (this.position.x - faceWidth));
       this.velocity = new Point2D(-this.velocity.x * dampen, this.velocity.y * dampen);
     }
 
     if (this.position.y < 0) {
-      this.position = this.position.setY(-this.position.y);
+      newPos = this.position.setY(-this.position.y);
       this.velocity = new Point2D(this.velocity.x * dampen, -this.velocity.y * dampen);
     }
 
     if (this.position.y >= faceHeight) {
-      this.position = this.position.setY(faceHeight - (this.position.y - faceHeight));
+      newPos = this.position.setY(faceHeight - (this.position.y - faceHeight));
       this.velocity = new Point2D(this.velocity.x * dampen, -this.velocity.y * dampen);
     }
+
+    return newPos;
   }
 
   applyForce(force: Point2D) {

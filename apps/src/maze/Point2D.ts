@@ -28,6 +28,10 @@ export class Point2D {
     return new Point2D(-this.x, this.y);
   }
 
+  public invert() {
+    return new Point2D(-this.x, -this.y);
+  }
+
   public invertY() {
     return new Point2D(this.x, -this.y);
   }

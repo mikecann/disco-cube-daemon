@@ -20,7 +20,7 @@ async function bootstrap() {
 
   const cube = new Cube(matrix);
   const accel = new Accelerometer();
-  const sims = narray(6).map(i => new Simulation(cube.faces[i], accel));
+  const sim = new Simulation(cube, accel);
 
   cube.animate((delta) => {
     matrix.clear();
@@ -33,10 +33,8 @@ async function bootstrap() {
       //cube.faces[i].drawText(i + "", 25, 18);
     }
 
-    for (let sim of sims) {
-      sim.update(delta);
-      sim.render(matrix);
-    }
+    sim.update(delta);
+    sim.render(matrix);
 
   }, 32);
 
