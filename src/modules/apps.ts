@@ -39,7 +39,6 @@ export const startAppService = () => {
         runningApp: AppExecution({
           error: "",
           name: "debug",
-          //state: DebugAppState({}),
           status: "running",
           stderr: "",
           stdout: "",
@@ -68,6 +67,8 @@ export const startAppService = () => {
   });
 };
 
+` ../../disco-cube-daemon/apps/images/space.mp4`
+
 const startNodeApp = (name: string) => (args: string[]) =>
   spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/apps/src/${name}.js`, ...args]);
 
@@ -80,9 +81,20 @@ const apps: Record<AppNames, (args: string[]) => RunningApp> = {
       `--led-cols=64`,
       `--led-chain=2`,
       `--led-parallel=3`,
-      // `--led-brightness=80`,
       `--led-slowdown-gpio=2`,
       ...args,
+    ]),
+
+  video: (args) =>
+    spawnApp(`video`, `/home/pi/rpi-rgb-led-matrix/utils/video-viewer`, [
+      `--led-rows=64`,
+      `--led-cols=64`,
+      `--led-chain=2`,
+      `--led-parallel=3`,
+      `--led-slowdown-gpio=2`,
+      `-f`,
+      `-F`,
+      `${process.cwd()}/apps/videos/${args[0]}`
     ]),
 
   sparkle: startNodeApp(`sparkle`),
