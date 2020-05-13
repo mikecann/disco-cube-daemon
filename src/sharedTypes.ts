@@ -72,6 +72,7 @@ export interface TerminalCommandExecution extends ReturnType<typeof TerminalComm
 export type Apps = {
   rpiDemos: AppState;
   video: AppState;
+  cubemap: AppState;
   paint: PaintAppState;
   debug: AppState;
   sparkle: AppState;
@@ -135,9 +136,11 @@ export const dataConverter: firebase.firestore.FirestoreDataConverter<any> = {
 
     if (value instanceof Uint8Array) {
       return firebase.firestore.Blob.fromUint8Array(value);
-    } else if (Array.isArray(value)) {
+    }
+    else if (Array.isArray(value)) {
       return value.map(o => dataConverter.toFirestore(o));
-    } else if (typeof value == "object") {
+    }
+    else if (typeof value == "object") {
       return Object.entries(value)
         .map(k => [k[0], dataConverter.toFirestore(k[1])] as const)
         .reduce((accum, curr) => ({ ...accum, [curr[0]]: curr[1] }), {});
@@ -158,12 +161,14 @@ const fromFirestoreValue = (value: any): any => {
 
   if (value instanceof firebase.firestore.Blob) {
     return value.toUint8Array();
-  } else if (typeof value == "object") {
+  }
+  else if (Array.isArray(value)) {
+    return value.map(o => fromFirestoreValue(o));
+  }
+  else if (typeof value == "object") {
     return Object.entries(value)
       .map(k => [k[0], fromFirestoreValue(k[1])] as const)
       .reduce((accum, curr) => ({ ...accum, [curr[0]]: curr[1] }), {});
-  } else if (Array.isArray(value)) {
-    return value.map(o => fromFirestoreValue(o));
   }
   return value;
 };

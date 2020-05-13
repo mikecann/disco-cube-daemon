@@ -97,6 +97,7 @@ const apps: Record<AppNames, (args: string[]) => RunningApp> = {
       `${process.cwd()}/apps/videos/${args[0]}`
     ]),
 
+  cubemap: startNodeApp(`cubemap`),
   sparkle: startNodeApp(`sparkle`),
   debug: startNodeApp(`debug`),
   paint: () => forkApp(`paint`, `${process.cwd()}/apps/dist/apps/src/paint.js`, []),
