@@ -1,14 +1,10 @@
-import { hang } from "../../src/utils/misc";
-import { createMatrix } from "./utils/matrix";
-import { randomColor } from "./utils/rendering";
+import { hang } from "../../../src/utils/misc";
+import { createMatrix } from "../utils/matrix";
+import { randomColor } from "../utils/rendering";
 
 
 async function bootstrap() {
-  const matrix = createMatrix({
-    showRefreshRate: false,
-  });
-
-  console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
+  const matrix = createMatrix();
 
   matrix.clear();
 

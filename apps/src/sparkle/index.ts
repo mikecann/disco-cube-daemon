@@ -1,6 +1,6 @@
-import { hang } from "../../src/utils/misc";
-import { createMatrix } from "./utils/matrix";
-import { randomColor } from "./utils/rendering";
+import { hang } from "../../../src/utils/misc";
+import { createMatrix } from "../utils/matrix";
+import { randomColor } from "../utils/rendering";
 
 class Pulser {
   constructor(readonly x: number, readonly y: number, readonly f: number) {}
@@ -13,8 +13,6 @@ class Pulser {
 
 async function bootstrap() {
   const matrix = createMatrix();
-
-  console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
 
   matrix.clear();
 

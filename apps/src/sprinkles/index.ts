@@ -5,16 +5,14 @@ import {
   LedMatrixInstance,
   PixelMapperType,
 } from "rpi-led-matrix";
-import { hang } from "../../src/utils/misc";
-import { createMatrix } from "./utils/matrix";
-import {  randomByte, randomColor } from "./utils/rendering";
+import { hang } from "../../../src/utils/misc";
+import { createMatrix } from "../utils/matrix";
+import {  randomByte, randomColor } from "../utils/rendering";
 
 const sideLength = 64;
 
 async function bootstrap() {
   const matrix = createMatrix();
-
-  console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
 
   matrix.clear();
 

@@ -67,10 +67,9 @@ export const startAppService = () => {
   });
 };
 
-` ../../disco-cube-daemon/apps/images/space.mp4`
 
 const startNodeApp = (name: string) => (args: string[]) =>
-  spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/apps/src/${name}.js`, ...args]);
+  spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/apps/src/${name}/index.js`, ...args]);
 
 const startMockApp = () => forkApp("mock", `${process.cwd()}/mock/dist/mock/src/index.js`, []);
 
@@ -102,11 +101,16 @@ const apps: Record<AppNames, (args: string[]) => RunningApp> = {
   debug: startNodeApp(`debug`),
   paint: () => forkApp(`paint`, `${process.cwd()}/apps/dist/apps/src/paint.js`, []),
   sprinkles: startNodeApp(`sprinkles`),
+
+  particles: startNodeApp(`particles`),
+  particleFlow: startNodeApp(`particleFlow`),
+  maze: startNodeApp(`maze`),
+  tilt: startNodeApp(`tilt`),
 };
 
 const spawnApp = (name: string, command: string, args: string[]): RunningApp => {
   const logger = log4js.getLogger(name);
-  logger.debug(`starting..`);
+  logger.debug(`spawning app`, { name, command, args });
 
   let proc: ChildProcessWithoutNullStreams | undefined = undefined;
   try {

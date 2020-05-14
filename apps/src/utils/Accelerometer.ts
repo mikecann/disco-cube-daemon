@@ -3,7 +3,7 @@ import Readline from "@serialport/parser-readline";
 
 export class Accelerometer {
 
-  accel: number[] = [];
+  accel: number[] = [0, 0, 0];
 
   constructor() {
     const port = new SerialPort("/dev/ttyACM0", {

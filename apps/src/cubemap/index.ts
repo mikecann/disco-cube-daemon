@@ -5,23 +5,23 @@ import {
   LedMatrixInstance,
   PixelMapperType,
 } from "rpi-led-matrix";
-import { hang } from "../../src/utils/misc";
-import { createMatrix } from "./utils/matrix";
-import { randomByte, randomColor, rgbToHex } from "./utils/rendering";
-import { faceLength, faceHeight, faceWidth } from "./utils/const";
-import { Cube } from "./utils/Cube";
-import { Accelerometer } from "./utils/Accelerometer";
-import { zeroPad } from "./utils/misc";
+import { createMatrix } from "../utils/matrix";
+import { randomByte, randomColor, rgbToHex } from "../utils/rendering";
+import { faceLength, faceHeight, faceWidth } from "../utils/const";
+import { Cube } from "../utils/Cube";
+import { Accelerometer } from "../utils/Accelerometer";
+import { zeroPad } from "../utils/misc";
 import * as jimp from "jimp";
+import { hang } from "../../../src/utils/misc";
 
 async function bootstrap() {
   const matrix = createMatrix();
 
-  console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
+  console.log({ args: process.argv });
 
   matrix.clear();
 
-  let image = await jimp.read(`${process.cwd()}/apps/images/cubemap3.png`);
+  let image = await jimp.read(`${process.cwd()}/apps/images/${process.argv[2]}`);
   image = image.rotate(-90);
 
   const cube = new Cube(matrix);

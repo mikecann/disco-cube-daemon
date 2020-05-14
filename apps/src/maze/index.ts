@@ -3,16 +3,7 @@ import { hang } from "../../../src/utils/misc";
 import { createMatrix } from "../utils/matrix";
 
 async function bootstrap() {
-  const matrix = createMatrix(
-    {
-      showRefreshRate: false,
-    },
-    {
-      gpioSlowdown: 4,
-    }
-  );
-
-  console.log({ w: matrix.width(), h: matrix.height(), len: matrix.width() * matrix.height() * 3 });
+  const matrix = createMatrix();
 
   const game = new Game(matrix);
   game.init();

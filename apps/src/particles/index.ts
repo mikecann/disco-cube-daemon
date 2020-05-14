@@ -6,15 +6,7 @@ import { Cube } from "../utils/Cube";
 import { Accelerometer } from "../utils/Accelerometer";
 
 async function bootstrap() {
-  const matrix = createMatrix(
-    {
-      showRefreshRate: false,
-    },
-    {
-      gpioSlowdown: 3,
-
-    }
-  );
+  const matrix = createMatrix();
 
   matrix.font(new Font("helvR12", `${process.cwd()}/apps/fonts/spleen-16x32.bdf`));
 

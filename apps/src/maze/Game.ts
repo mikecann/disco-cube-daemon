@@ -34,7 +34,7 @@ export class Game {
 
   private timeSinceLastFrame = 0;
 
-  constructor(private matrix: LedMatrixInstance) {}
+  constructor(private matrix: LedMatrixInstance) { }
 
   init() {
     const cellsW = sideLength / 2 - 1;
@@ -47,7 +47,7 @@ export class Game {
     this.spiders = narray(spiders).map((_) => new Spider(this));
 
     this.mrNibbles = new MrNibbles(this);
-    
+
     this.nibbles = this.collision
       .enumerateCells()
       .filter((o) => !o.isWall)
@@ -91,6 +91,7 @@ export class Game {
 
   start() {
     new Cube(this.matrix).animate((delta) => {
+      this.matrix.clear();
       this.update(delta);
       this.render();
     }, 32);

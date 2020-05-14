@@ -5,13 +5,13 @@ import {
   LedMatrixInstance,
   PixelMapperType,
 } from "rpi-led-matrix";
-import { hang } from "../../src/utils/misc";
-import { createMatrix } from "./utils/matrix";
-import { randomByte, randomColor, rgbToHex } from "./utils/rendering";
-import { faceLength } from "./utils/const";
-import { Cube } from "./utils/Cube";
-import { Accelerometer } from "./utils/Accelerometer";
-import { zeroPad } from "./utils/misc";
+import { hang } from "../../../src/utils/misc";
+import { createMatrix } from "../utils/matrix";
+import { randomByte, randomColor, rgbToHex } from "../utils/rendering";
+import { faceLength } from "../utils/const";
+import { Cube } from "../utils/Cube";
+import { Accelerometer } from "../utils/Accelerometer";
+import { zeroPad } from "../utils/misc";
 
 async function bootstrap() {
   const matrix = createMatrix();

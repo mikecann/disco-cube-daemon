@@ -13,7 +13,7 @@ export const defaultMatrixOptions: MatrixOptions = {
   chainLength: 2,
   parallel: 3,
   pixelMapperConfig: LedMatrixUtils.encodeMappers({ type: PixelMapperType.U }),
-  showRefreshRate: true,
+  showRefreshRate: false,
   pwmDitherBits: 2,
   brightness: 100,
 } as const;
@@ -22,7 +22,7 @@ LedMatrixUtils.encodeMappers();
 
 export const defaultMatrixRuntimeOptions: RuntimeOptions = {
   ...LedMatrix.defaultRuntimeOptions(),
-  gpioSlowdown: 4,
+  gpioSlowdown: 3,
 } as const;
 
 export const createMatrix = (
