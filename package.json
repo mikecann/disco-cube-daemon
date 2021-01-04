@@ -14,11 +14,7 @@
     "build": "yarn compile",
     "build:apps": "cd apps && yarn compile",
     "start": "node ./dist/index.js",
-    "pretty": "prettier --write ./src/**/*.{ts,tsx} && prettier --write ./apps/src/**/*.{ts,tsx}",
-    "particles": "sudo node ./apps/dist/apps/src/particles/index.js",
-    "particleFlow": "sudo node ./apps/dist/apps/src/particleFlow/index.js",
-    "cubemap": "sudo node ./apps/dist/apps/src/cubemap.js",
-    "mic": "sudo node ./apps/dist/apps/src/mic.js"
+    "pretty": "prettier --write ./src/**/*.{ts,tsx}"
   },
   "dependencies": {
     "@types/lodash": "^4.14.150",

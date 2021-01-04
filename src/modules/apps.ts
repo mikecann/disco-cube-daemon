@@ -39,6 +39,7 @@ export const startAppService = () => {
         runningApp: AppExecution({
           error: "",
           name: "debug",
+          //state: DebugAppState({}),
           status: "running",
           stderr: "",
           stdout: "",
@@ -67,9 +68,8 @@ export const startAppService = () => {
   });
 };
 
-
 const startNodeApp = (name: string) => (args: string[]) =>
-  spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/apps/src/${name}/index.js`, ...args]);
+  spawnApp(name, getNodePath(), [`${process.cwd()}/apps/dist/apps/src/${name}.js`, ...args]);
 
 const startMockApp = () => forkApp("mock", `${process.cwd()}/mock/dist/mock/src/index.js`, []);
 
@@ -80,37 +80,20 @@ const apps: Record<AppNames, (args: string[]) => RunningApp> = {
       `--led-cols=64`,
       `--led-chain=2`,
       `--led-parallel=3`,
+      // `--led-brightness=80`,
       `--led-slowdown-gpio=2`,
       ...args,
     ]),
 
-  video: (args) =>
-    spawnApp(`video`, `/home/pi/rpi-rgb-led-matrix/utils/video-viewer`, [
-      `--led-rows=64`,
-      `--led-cols=64`,
-      `--led-chain=2`,
-      `--led-parallel=3`,
-      `--led-slowdown-gpio=2`,
-      `-f`,
-      `-F`,
-      `${process.cwd()}/apps/videos/${args[0]}`
-    ]),
-
-  cubemap: startNodeApp(`cubemap`),
   sparkle: startNodeApp(`sparkle`),
   debug: startNodeApp(`debug`),
   paint: () => forkApp(`paint`, `${process.cwd()}/apps/dist/apps/src/paint.js`, []),
   sprinkles: startNodeApp(`sprinkles`),
-
-  particles: startNodeApp(`particles`),
-  particleFlow: startNodeApp(`particleFlow`),
-  maze: startNodeApp(`maze`),
-  tilt: startNodeApp(`tilt`),
 };
 
 const spawnApp = (name: string, command: string, args: string[]): RunningApp => {
   const logger = log4js.getLogger(name);
-  logger.debug(`spawning app`, { name, command, args });
+  logger.debug(`starting..`);
 
   let proc: ChildProcessWithoutNullStreams | undefined = undefined;
   try {
