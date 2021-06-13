@@ -1,3 +1,4 @@
+import { randomOne } from "../../../src/utils/misc";
 
 
 export class Point2D {
@@ -23,14 +24,30 @@ export class Point2D {
     return false;
   }
 
+  public left() {
+    if (this.equals(Point2D.north)) {
+      return Point2D.west;
+    }
+    if (this.equals(Point2D.east)) {
+      return Point2D.north;
+    }
+    if (this.equals(Point2D.south)) {
+      return Point2D.east;
+    }
+    if (this.equals(Point2D.west)) {
+      return Point2D.south;
+    }
+    throw new Error(`not a valid direction '${this}'`)
+  }
+
   public static readonly zero = new Point2D();
   public static readonly north = new Point2D(0, 1);
   public static readonly south = new Point2D(0, -1);
-  public static readonly east = new Point2D(-1, 0);
-  public static readonly west = new Point2D(1, 0);
+  public static readonly east = new Point2D(1, 0);
+  public static readonly west = new Point2D(-1, 0);
 
-  public static readonly directions: ReadonlyArray<Point2D> =
+  public static readonly directions: Point2D[] =
     [Point2D.north, Point2D.south, Point2D.east, Point2D.west]
 
-  public static randomDirection = () => new Point2D(Math.random() < 0.5 ? -1 : 1, Math.random() < 0.5 ? -1 : 1);
+  public static randomDirection = () => randomOne(Point2D.directions);
 }

@@ -9,5 +9,5 @@ const localConfig = {
 export const config = {
   ...localConfig,
   ...process.env,
-  ...tryRequire(`${process.cwd()}/local.config.json`, {}),
+  ...tryRequire(`./local.config.json`, {}),
 } as typeof localConfig;
