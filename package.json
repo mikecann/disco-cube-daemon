@@ -7,14 +7,18 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "yarn install:apps && yarn install:mock",
-    "install:apps": "cd apps && yarn",
-    "install:mock": "cd mock && yarn",
+    "install:apps": "cd apps && yarn install",
+    "install:mock": "cd mock && yarn install",
     "compile": "tsc --noEmit",
     "dev": "nodemon -w 'src/**/*.*' --exec ts-node 'src/index.ts'",
-    "build": "yarn compile",
-    "build:apps": "cd apps && yarn compile",
+    "build": "tsc",
+    "build:apps": "cd apps && yarn build",
     "start": "node ./dist/index.js",
-    "pretty": "prettier --write ./src/**/*.{ts,tsx}"
+    "pretty": "prettier --write ./src/**/*.{ts,tsx} && prettier --write ./apps/src/**/*.{ts,tsx}",
+    "particles": "sudo node ./apps/dist/apps/src/particles/index.js",
+    "particleFlow": "sudo node ./apps/dist/apps/src/particleFlow/index.js",
+    "cubemap": "sudo node ./apps/dist/apps/src/cubemap.js",
+    "mic": "sudo node ./apps/dist/apps/src/mic.js"
   },
   "dependencies": {
     "@types/lodash": "^4.14.150",

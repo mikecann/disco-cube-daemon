@@ -12,6 +12,6 @@ export const configLogger = () => {
     },
     categories: { default: { appenders: ["fileout", "consoleout"], level: "debug" } },
   });
-}
+};
 
 export const logger = log4js.getLogger(`output`);

@@ -12,6 +12,7 @@ import { setupShutdown } from "./utils/shutdown";
 import * as log4js from "log4js";
 import { configLogger } from "./utils/logging";
 import { isRoot, isWindows } from "./utils/misc";
+import { fixSerialPermission } from "./utils/fixSerialPermission";
 
 configLogger();
 
@@ -25,6 +26,8 @@ async function bootstrap() {
     logger.error(`must be run as root user (sudo)`);
     process.exit(1);
   }
+
+  fixSerialPermission();
 
   const app = initFirebase();
 
@@ -56,7 +59,9 @@ async function bootstrap() {
     (essentialSystemInfo) => updateFirebaseState("cubes", { essentialSystemInfo })
   );
 
-  setInterval(() => {}, 1000);
+
+
+  setInterval(() => { }, 1000);
 }
 
 bootstrap().catch((e: any) => {

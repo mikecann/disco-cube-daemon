@@ -5,7 +5,6 @@
     "module": "commonjs",
     "target": "es6",
     "lib": ["dom", "esnext"],
-    "incremental": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
