@@ -77,7 +77,6 @@ export class CollisionMap {
     const row = this.rows[pos.y];
     if (!row) throw new Error(`pos out of Y bounds '${pos}'`);
     const cell = row[pos.x];
-    if (cell == undefined) throw new Error(`pos out of X bounds '${pos}'`);
     return cell == true;
   }
 

@@ -13,9 +13,9 @@ import { shuffle } from "../../../src/utils/misc"
 
 const sideLength = 64;
 const sides = 6;
-const superNibblesPerSize = 30;
+const superNibblesPerSize = 5;
 const superNibbles = sides * superNibblesPerSize;
-const spidersPerSize = 6;
+const spidersPerSize = 4;
 const spiders = sides * spidersPerSize;
 
 export class Game {
@@ -42,6 +42,7 @@ export class Game {
 
     this.spiders = narray(spiders).map(_ => new Spider(this));
 
+    //this.spawnPoint = this.maze.getRandomPoint();
     this.mrNibbles = new MrNibbles(this);
     this.nibbles = this.collision.enumerateCells().filter(o => !o.isWall).map(o => new Nibble(o.pos));
     this.superNibbles = shuffle(this.nibbles).slice(0, superNibbles).map(o => new SuperNibble(o.position));
@@ -66,10 +67,6 @@ export class Game {
 
   public destorySuperNibble(nibble: SuperNibble) {
     this.superNibbles = this.superNibbles.filter(n => n != nibble);
-  }
-
-  public destroySpider(spider: Spider) {
-    this.spiders = this.spiders.filter(n => n != spider);
   }
 
   start() {
