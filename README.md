@@ -1,4 +1,4 @@
-**NOTE: Everything here is PROOF OF CONCEPT. I don't plan on supporting this code so if you want to use it then no problem but use it at your own risk.**
+# NOTE: Everything here is PROOF OF CONCEPT. I don't plan on supporting this code so if you want to use it then no problem but use it at your own risk.
 
 # Disco Cube Daemon
 
